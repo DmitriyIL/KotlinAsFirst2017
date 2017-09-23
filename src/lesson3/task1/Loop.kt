@@ -66,7 +66,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var count = 0
-    var number = n
+    var number = abs(n)
     do{
         number /= 10
         count++
@@ -121,7 +121,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (i in n-1..2) {
+    for (i in n-1 downTo 2) {
         if (n % i == 0) return i
     }
     return 1
@@ -152,7 +152,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in 1..sqrt(m.toDouble()).toInt()+1)
+    for (i in 0..sqrt(m.toDouble()).toInt()+1)
         if (sqr(i.toDouble()) <= n) {
             if (sqr(i.toDouble()) >= m) return true
         }
@@ -169,10 +169,10 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
 fun sin(x: Double, eps: Double): Double {
     var arg = x
     while (arg > 2*PI) {
-        arg =- 2*PI
+        arg -= 2*PI
     }
     while (arg < -2*PI) {
-        arg =+ 2*PI
+        arg += 2*PI
     }
     var sin = arg
     var k = 3
@@ -196,10 +196,10 @@ fun sin(x: Double, eps: Double): Double {
 fun cos(x: Double, eps: Double): Double {
     var arg = x
     while (arg > 2*PI) {
-        arg =- 2*PI
+        arg -= 2*PI
     }
     while (arg < -2*PI) {
-        arg =+ 2*PI
+        arg += 2*PI
     }
     var cos = 1.0
     var k = 2
