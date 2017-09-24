@@ -2,7 +2,6 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import java.io.File.separator
 import java.lang.Math.*
 
 /**
@@ -183,7 +182,7 @@ fun polynom(p: List<Double>, x: Double): Double {
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
     if (list.isNotEmpty()) {
-        val listFill = mutableListOf<Double>(list[0])
+        val listFill = mutableListOf(list[0])
         for (i in 1 until list.size) {
             val listFillSum = listFill.sum()
             listFill.add(list[i])
@@ -244,6 +243,7 @@ fun factorizeToString(n: Int): String {
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
+    if (n == 0) return listOf(0)
     val newSys = mutableListOf<Int>()
     var remainN = n
     while (remainN > 0) {
@@ -264,6 +264,7 @@ return newSys
  */
 fun convertToString(n: Int, base: Int): String {
     val figure = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+    if (n == 0) return "0"
     val newSys = mutableListOf<String>()
     var remainN = n
     while (remainN > 0) {
@@ -330,10 +331,14 @@ fun roman(n: Int): String {
     val firstNum = arrayOf("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX")
     val secondNum = arrayOf("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
     val thirdNum = arrayOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
-    val forthNum = arrayOf("", "M", "MM", "MMM")
-    var nStr = n.toString()
+    var fourthNum = ""
+    for (i in 1..n/1000) {
+        fourthNum += "M"
+    }
+    var nStr = (n % 1000).toString()
     while (nStr.length < 4) { nStr = "0" + nStr }
-    return forthNum[nStr[0].toInt()-48] + thirdNum[nStr[1].toInt()-48] + secondNum[nStr[2].toInt()-48] + firstNum[nStr[3].toInt()-48]
+
+    return fourthNum + thirdNum[nStr[1].toInt()-48] + secondNum[nStr[2].toInt()-48] + firstNum[nStr[3].toInt()-48]
 }
 /**
  * Очень сложная
@@ -370,7 +375,7 @@ fun russian(n: Int): String {
             if (half % 10 == 1) {
                 num.add(1, "одна")
                 num.add(1, "тысяча")
-            } else if ((half % 10 >= 2) || (half % 10 <= 4)) {
+            } else if ((half % 10 >= 2) && (half % 10 <= 4)) {
                 num.add(0, "тысячи")
                 num.add(0, fifthArr[half % 10 - 2])
                 num.add(0, thirdArr[half / 10 % 10])
