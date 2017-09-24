@@ -373,8 +373,9 @@ fun russian(n: Int): String {
         }
         else {
             if (half % 10 == 1) {
-                num.add(1, "одна")
-                num.add(1, "тысяча")
+                num.add(0, "тысяча")
+                num.add(0, "одна")
+                num.add(0, thirdArr[half / 10 % 10])
             } else if ((half % 10 >= 2) && (half % 10 <= 4)) {
                 num.add(0, "тысячи")
                 num.add(0, fifthArr[half % 10 - 2])
