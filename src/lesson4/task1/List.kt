@@ -375,22 +375,15 @@ fun russian(n: Int): String {
             if (half % 10 == 1) {
                 num.add(0, "тысяча")
                 num.add(0, "одна")
-                num.add(0, thirdArr[half / 10 % 10])
             } else if ((half % 10 >= 2) && (half % 10 <= 4)) {
                 num.add(0, "тысячи")
                 num.add(0, fifthArr[half % 10 - 2])
-                num.add(0, thirdArr[half / 10 % 10])
 
             } else if (half % 10 == 0) {
-                num.add(0, thirdArr[half / 10 % 10])
-                num.add(1, "тысяч")
-            }
-            else{
                 num.add(0, "тысяч")
                 num.add(0, firstArr[half % 10])
-                num.add(0, thirdArr[half / 10 % 10])
             }
-
+            num.add(0, thirdArr[half / 10 % 10])
         }
         num.add(0, fourthArr[half / 100 % 10])
     }
