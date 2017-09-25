@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson5.task1
 
+import java.awt.datatransfer.StringSelection
+
 /**
  * Пример
  *
@@ -23,7 +25,7 @@ fun timeStrToSeconds(str: String): Int {
  * Дано число n от 0 до 99.
  * Вернуть его же в виде двухсимвольной строки, от "00" до "99"
  */
-fun twoDigitStr(n: Int) = if (n in 0..9) "0$n" else "$n"
+fun twoDigitStr(n: Int) = String.format("%02d", n)
 
 /**
  * Пример
@@ -66,7 +68,26 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val months = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
+    val parts = str.split(" ")
+    var month = -1
+    var day = -1
+    var year = -1
+    try {
+        try {
+            day = parts[0].toInt()
+            year = parts[2].toInt()
+            for (el in months)
+                if (el == parts[1]) {
+                    month = months.indexOf(el) + 1
+                }
+        } catch (e : NumberFormatException) {return ""}
+    }catch (e : IndexOutOfBoundsException) {return ""}
+if ((month == -1) || (day == -1) || (year == -1) || (parts.size > 3)) return ""
+        return String.format("%02d.%02d.%d", day, month ,year)
+
+}
 
 /**
  * Средняя
@@ -75,7 +96,23 @@ fun dateStrToDigit(str: String): String = TODO()
  * Перевести её в строковый формат вида "15 июля 2016".
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val months = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
+    val parts = digital.split(".")
+    var day = -1
+    var year = -1
+    val month : String
+    try {
+        try {
+            day = parts[0].toInt()
+            year = parts[2].toInt()
+            month = months[parts[1].toInt() - 1]
+        } catch (e: NumberFormatException) { return  ""}
+        } catch (e : IndexOutOfBoundsException) {return ""}
+    if ((day == -1) || (year == -1) || (parts.size > 3)) return ""
+        return String.format("%d %s %d", day, month, year)
+
+}
 
 /**
  * Средняя
