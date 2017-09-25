@@ -304,7 +304,9 @@ return num.toInt()
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-val figure = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
+val figure = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c",
+        "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+        "t", "u", "v", "w", "x", "y", "z")
     val digits = mutableListOf<Int>()
     for (c in str) {
         digits.add(figure.indexOf(c.toString()))
@@ -380,6 +382,10 @@ fun russian(n: Int): String {
                 num.add(0, fifthArr[half % 10 - 2])
 
             } else if (half % 10 == 0) {
+                num.add(0, "тысяч")
+                num.add(0, firstArr[half % 10])
+            }
+            else {
                 num.add(0, "тысяч")
                 num.add(0, firstArr[half % 10])
             }
