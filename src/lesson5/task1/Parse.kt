@@ -72,19 +72,16 @@ fun dateStrToDigit(str: String): String {
     val months = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
     val parts = str.split(" ")
     var month = -1
-    var day = -1
-    var year = -1
     try {
-            day = parts[0].toInt()
-            year = parts[2].toInt()
-            for (el in months)
-                if (el == parts[1]) {
-                    month = months.indexOf(el) + 1
+            val day = parts[0].toInt()
+            val year = parts[2].toInt()
+            for (i in 0 until 12)
+                if (months[i] == parts[1]){
+                    month = i+1
                 }
-    } catch (e : Exception) {return ""}
-if ((month == -1) || (day == -1) || (year == -1) || (parts.size > 3)) return ""
+        if ((parts.size > 3) || (month == -1)) return ""
         return String.format("%02d.%02d.%d", day, month ,year)
-
+    } catch (e : Exception) {return ""}
 }
 
 /**
@@ -97,17 +94,13 @@ if ((month == -1) || (day == -1) || (year == -1) || (parts.size > 3)) return ""
 fun dateDigitToStr(digital: String): String {
     val months = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
     val parts = digital.split(".")
-    val day : Int
-    var year = -1
-    val month : String
     try {
-            day = parts[0].toInt()
-            year = parts[2].toInt()
-            month = months[parts[1].toInt() - 1]
-    } catch (e: Exception) { return  ""}
-    if ((day == -1) || (year == -1) || (parts.size > 3)) return ""
+            val day = parts[0].toInt()
+            val year = parts[2].toInt()
+            val month = months[parts[1].toInt() - 1]
+        if (parts.size > 3) return ""
         return String.format("%d %s %d", day, month, year)
-
+    } catch (e: Exception) { return  ""}
 }
 
 /**
@@ -148,7 +141,22 @@ return number
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val parts = jumps.split(" ")
+    val results = mutableListOf<Int>()
+    try {
+        for (part in parts) {
+            if ((part != "-") && (part != "%")) {
+                results.add(part.toInt())
+            }
+        }
+    } catch (e : Exception) { return -1}
+    var max = -1
+    for (el in results) {
+        if (el > max) max = el
+    }
+    return max
+}
 
 /**
  * Сложная
