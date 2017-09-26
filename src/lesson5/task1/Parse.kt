@@ -199,14 +199,38 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    val parts = expression.split(" ")
-    for (i in 0 until parts.size)
-        if ((parts[i] == "+") || (parts[i] == "-")){
+    val e = IllegalArgumentException()
+
+    var parts = expression.split(" ")
+    parts = parts.filter { it != ""}
+
+    var elements = parts[0].split("")
+    elements = elements.filter { it != ""}
+    for ( el in elements){
+        if ( el in ("0".."9")) continue
+        else{
+            throw e
         }
+    }
+    var result = parts[0].toInt()
+    var num : Int
+    for (i in 1 until parts.size step 2) {
+        elements = parts[i+1].split("")
+        elements = elements.filter { it != ""}
+        for (el in elements)
+            if (el in ("0".."9")) continue
+            else throw e
 
-return 5
+        num = parts[i+1].toInt()
 
+        when (parts[i]){
+            "+" -> result += num
+            "-" -> result -= num
+            else -> throw e
+        }
+    }
 
+return result
 }
 
 /**
