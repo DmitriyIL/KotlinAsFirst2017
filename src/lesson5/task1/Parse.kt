@@ -75,15 +75,13 @@ fun dateStrToDigit(str: String): String {
     var day = -1
     var year = -1
     try {
-        try {
             day = parts[0].toInt()
             year = parts[2].toInt()
             for (el in months)
                 if (el == parts[1]) {
                     month = months.indexOf(el) + 1
                 }
-        } catch (e : NumberFormatException) {return ""}
-    }catch (e : IndexOutOfBoundsException) {return ""}
+    } catch (e : Exception) {return ""}
 if ((month == -1) || (day == -1) || (year == -1) || (parts.size > 3)) return ""
         return String.format("%02d.%02d.%d", day, month ,year)
 
@@ -99,16 +97,14 @@ if ((month == -1) || (day == -1) || (year == -1) || (parts.size > 3)) return ""
 fun dateDigitToStr(digital: String): String {
     val months = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
     val parts = digital.split(".")
-    var day = -1
+    val day : Int
     var year = -1
     val month : String
     try {
-        try {
             day = parts[0].toInt()
             year = parts[2].toInt()
             month = months[parts[1].toInt() - 1]
-        } catch (e: NumberFormatException) { return  ""}
-        } catch (e : IndexOutOfBoundsException) {return ""}
+    } catch (e: Exception) { return  ""}
     if ((day == -1) || (year == -1) || (parts.size > 3)) return ""
         return String.format("%d %s %d", day, month, year)
 
@@ -126,7 +122,21 @@ fun dateDigitToStr(digital: String): String {
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    var cutPhone = phone
+    var number = ""
+    if (cutPhone[0] == '+') {
+        number = "+"
+        cutPhone = cutPhone.substring(1)
+    }
+    var parts = cutPhone.split("")
+    parts = parts.filter{(it !=  "-") && (it != "+") && (it != "") && (it != " ") && (it != "(") && (it != ")")}
+    for (i in 0 until parts.size) {
+        if (parts[i] in ("0".."9")) number += parts[i]
+        else return ""
+    }
+return number
+}
 
 /**
  * Средняя
