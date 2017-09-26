@@ -118,10 +118,12 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     var cutPhone = phone
     var number = ""
-    if (cutPhone[0] == '+') {
-        number = "+"
-        cutPhone = cutPhone.substring(1)
-    }
+    try {
+        if (cutPhone[0] == '+') {
+            number = "+"
+            cutPhone = cutPhone.substring(1)
+        }
+    } catch (e : IndexOutOfBoundsException) { return ""}
     var parts = cutPhone.split("")
     parts = parts.filter{(it !=  "-") && (it != "+") && (it != "") && (it != " ") && (it != "(") && (it != ")")}
     for (i in 0 until parts.size) {
@@ -146,7 +148,7 @@ fun bestLongJump(jumps: String): Int {
     val results = mutableListOf<Int>()
     try {
         for (part in parts) {
-            if ((part != "-") && (part != "%")) {
+            if ((part != "-") && (part != "%") && (part != "")) {
                 results.add(part.toInt())
             }
         }
@@ -168,8 +170,21 @@ fun bestLongJump(jumps: String): Int {
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
-
+fun bestHighJump(jumps: String): Int {
+    val results = mutableListOf<Int>()
+    val parts = jumps.split(" ")
+    try {
+        for (i in 0 until parts.size) {
+            if (parts[i] == "+")  // может обратится к индексу -1
+                results.add(parts[i - 1].toInt())// может обратится к индексу -1, ошибка с toint
+        }
+    }catch (e : Exception) { return -1}
+    var max = -1
+    for (el in results) {
+        if (el > max) max = el
+    }
+    return max
+}
 /**
  * Сложная
  *
