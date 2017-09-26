@@ -175,9 +175,13 @@ fun bestHighJump(jumps: String): Int {
     val parts = jumps.split(" ")
     try {
         for (i in 0 until parts.size) {
-            if (parts[i] == "+")  // может обратится к индексу -1
-                results.add(parts[i - 1].toInt())// может обратится к индексу -1, ошибка с toint
-        }
+            var elements = parts[i].split("")
+            for (el in elements)
+                if (el == "+") {
+                        results.add(parts[i - 1].toInt())
+                        break
+                }
+                }
     }catch (e : Exception) { return -1}
     var max = -1
     for (el in results) {
@@ -194,7 +198,16 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val parts = expression.split(" ")
+    for (i in 0 until parts.size)
+        if ((parts[i] == "+") || (parts[i] == "-")){
+        }
+
+return 5
+
+
+}
 
 /**
  * Сложная
