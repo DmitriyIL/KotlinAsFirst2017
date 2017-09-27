@@ -242,7 +242,36 @@ return result
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val string = str.toLowerCase()
+    var elements = string.split("")
+    elements = elements.filter { it != "" }
+    var i = 0
+    var index1 = -1
+    var index2 = -1
+    try {
+        do {
+            if (i > 0) i = index2
+            index1 = i
+            var word1 = ""
+            while (elements[i] != " ") {
+                word1 += elements[i]
+                i++
+
+            }
+            i++
+
+            index2 = i
+            var word2 = ""
+            while (elements[i] != " ") {
+                word2 += elements[i]
+                i++
+            }
+            i++
+        } while (word1 != word2)
+    } catch (e : Exception) { return -1}
+    return index1
+}
 
 /**
  * Сложная
@@ -255,7 +284,31 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть положительными
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val goods = description.split("; ")
+    val prices = mutableListOf<Double>()
+    val names = mutableListOf<String>()
+    var max = 0.0
+    var iMax = 0
+
+    try {
+       for (elements in goods) {
+           var el = elements.split(" ")
+           names.add(el[0])
+           prices.add(el[1].toDouble())
+       }
+
+       for (i in 0 until goods.size) {
+           if (prices[i] < 0) return ""
+           if (prices[i] > max) {
+               max = prices[i]
+               iMax = i
+           }
+       }
+   } catch (e : Exception) {return ""}
+
+    return names[iMax]
+}
 
 /**
  * Сложная
