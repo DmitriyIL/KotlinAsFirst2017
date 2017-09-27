@@ -51,13 +51,15 @@ fun ageDescription(age: Int): String {
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
                    t3: Double, v3: Double): Double {
-    val s1 = t1*v1
-    val s2 = t2*v2
-    val s3 = t3*v3
+    val s1 = t1 * v1
+    val s2 = t2 * v2
+    val s3 = t3 * v3
     val s = s1 + s2 + s3
-    if (s/2 <= s1) return  (s/2.0)/v1
-    else if (s/2 <= s1 + s2) return t1 + (s/2.0 - s1)/v2
-    else return t1 + t2 + (s/2.0 - s1 - s2)/v3
+    return when {
+        s / 2 <= s1  ->  (s / 2) / v1
+        s / 2 <= s1 + s2  ->  t1 + (s / 2 - s1) / v2
+        else  ->  t1 + t2 + (s / 2 - s1 - s2) / v3
+    }
 }
 
 /**
@@ -110,22 +112,11 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    //находим самую большую сторону
-    var max = Math.max(a,b)
-    var avr = min(a,b)
-    var min = c
-    if (c > max) {
-        min = avr
-        avr = max
-        max = c
-    }
-    else if (c > avr) {
-        min = avr
-        avr = c
-    }
-    //находим косинус угла лежащего напротив бОльшей стороны
-    val cos = (pow(min, 2.0) + pow(avr, 2.0) - pow(max, 2.0)) / (2 * avr * min)
+    val max = max(max(a, b), c)
+    val min = min(min(a, b), c)
+    val avr = max(min(a, b), min(max(a, b), c))
 
+    val cos = (pow(min, 2.0) + pow(avr, 2.0) - pow(max, 2.0)) / (2 * avr * min)
     return if ((cos > 0) && (cos < 1)) 0
     else if (cos == 0.0) 1
     else if ((cos < 0) && (cos > -1)) 2
@@ -140,10 +131,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if ((a > d) || (c > b)) return -1
-    return  if ((c >= a) && (d <= b)) d-c
-    else if ((a >= c) && (b <= d)) b-a
-    else if ((d - a) > (b - c)) b-c
-    else d-a
+fun segmentLength(a: Int, b: Int, c: Int, d: Int) : Int {
+    return if (c >= a && d <= b) d - c
+    else if (c in a..b) b - c
+    else if (c <= a && b <= d) b-a
+    else if (d in a..b) d - a
+    else -1
 }
