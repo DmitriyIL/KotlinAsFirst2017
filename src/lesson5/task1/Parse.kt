@@ -320,7 +320,7 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
-    if (roman == "") return -1
+    if (roman == "") return 0
     val digits1 = arrayOf("I", "V", "X", "L", "C", "D", "M", "error")
     val digits2 = arrayOf(1, 5, 10, 50, 100, 500, 1000)
     var sings = roman.split("")
@@ -384,38 +384,50 @@ fun fromRoman(roman: String): Int {
  */
 
 
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()/*{
-    var instructions = commands.split("")
-    instructions = instructions.filter { it != "" }
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    var e = IllegalArgumentException()
+   // var instructions = commands.split("")
+   // instructions = instructions.filter { it != "" }
+
+    var AMT = 0
+    for (i in 0 until commands.length) {
+        if (commands[i] == '[') AMT++
+        else if (commands[i] == ']') AMT--
+        if (AMT < 0) throw e
+    }
+    if (AMT != 0 || commands == "")
+        throw e
 
     val elements = mutableListOf<Int>()
     for (i in 1..cells) {
         elements.add(0)
     }
 
+    var count = 0
     var iElem = cells / 2
-    var iInstr = 0
-    var numOfCycle = 0
-    while (iInstr < instructions.size) {
-        if (instructions[iInstr] == ">") iElem++
-        else if (instructions[iInstr] == "<") iElem--
-        else if (instructions[iInstr] == " ")
-        else if (instructions[iInstr] == "+") elements[iElem]++
-        else if (instructions[iInstr] == "-") elements[iElem]--
-        else if (instructions[iInstr] == "[") {
+    var iCom = 0
+    while (iCom < commands.length) {
+        count++
+        if (commands[iCom] == '>') iElem++
+        else if (commands[iCom] == '<') iElem--
+        else if (commands[iCom] == ' ')
+        else if (commands[iCom] == '+') elements[iElem]++
+        else if (commands[iCom] == '-') elements[iElem]--
+        else if (commands[iCom] == '[') {
             if (elements[iElem] == 0)
-                while (instructions[iInstr] != "]")
-                    iInstr++
-            else {
-                numOfCycle = true
+                while (commands[iCom] != ']')
+                    iCom++
+            else
                 continue
-            }
-        } else if (instructions[iInstr] == "]") {
-
+        } else if (commands[iCom] == ']') {
+            if (elements[iElem] != 0)
+                while (commands[iCom] != '[')
+                    iCom--
+            else continue
         }
-
+        else throw e
+        iElem++
     }
 
-    return listOf()
+    return elements
 }
-        */
