@@ -19,7 +19,7 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean =
-        (number % 10 + number/10%10) == (number/100%10 + number/1000%10)
+        (number % 10 + number / 10 % 10) == (number / 100 % 10 + number / 1000 % 10)
 
 /**
  * Простая
@@ -40,7 +40,7 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean =
-        sqrt(sqr(x2-x1) + sqr(y2-y1))+ r1 <= r2
+        sqrt(sqr(x2 - x1) + sqr(y2 - y1)) + r1 <= r2
 
 /**
  * Средняя

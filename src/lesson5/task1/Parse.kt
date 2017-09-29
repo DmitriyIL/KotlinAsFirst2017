@@ -152,7 +152,7 @@ fun bestLongJump(jumps: String): Int {
                 results.add(part.toInt())
             }
         }
-    } catch (e : Exception) { return -1}
+    } catch (e : Exception) { return -1 }
     var max = -1
     for (el in results) {
         if (el > max) max = el
@@ -182,7 +182,8 @@ fun bestHighJump(jumps: String): Int {
                         break
                 }
                 }
-    }catch (e : Exception) { return -1}
+    }
+    catch (e : Exception) { return -1 }
     var max = -1
     for (el in results) {
         if (el > max) max = el
@@ -200,10 +201,9 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val e = IllegalArgumentException()
-
+    if (expression == "") return throw e
     var parts = expression.split(" ")
     parts = parts.filter { it != ""}
-
     var elements = parts[0].split("")
     elements = elements.filter { it != ""}
     for ( el in elements){
@@ -220,7 +220,6 @@ fun plusMinus(expression: String): Int {
         for (el in elements)
             if (el in ("0".."9")) continue
             else throw e
-
         num = parts[i+1].toInt()
 
         when (parts[i]){
@@ -247,20 +246,19 @@ fun firstDuplicateIndex(str: String): Int {
     var elements = string.split("")
     elements = elements.filter { it != "" }
     var i = 0
-    var index1 = -1
+    var index1 : Int
     var index2 = -1
     try {
         do {
-            if (i > 0) i = index2
+            if (i > 0)
+                i = index2
             index1 = i
             var word1 = ""
             while (elements[i] != " ") {
                 word1 += elements[i]
                 i++
-
             }
             i++
-
             index2 = i
             var word2 = ""
             while (elements[i] != " ") {
@@ -321,7 +319,32 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    if (roman == "") return -1
+    val digits1 = arrayOf("I", "V", "X", "L", "C", "D", "M", "error")
+    val digits2 = arrayOf(1, 5, 10, 50, 100, 500, 1000)
+    var sings = roman.split("")
+    sings = sings.filter { it != "" }
+
+    var theNum = 0
+    var currentNum = 0
+    var pastNum = 0
+
+    for (i in sings.size - 1 downTo 0){
+        for (j in 0..7){
+            if (sings[i] == digits1[j]) {
+                currentNum = digits2[j]
+                break
+            }
+            if (j == 7) return -1
+        }
+    if (currentNum >= pastNum) theNum += currentNum
+        else theNum -= currentNum
+    pastNum = currentNum
+    }
+
+    return theNum
+}
 
 /**
  * Очень сложная
@@ -359,4 +382,40 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+
+
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()/*{
+    var instructions = commands.split("")
+    instructions = instructions.filter { it != "" }
+
+    val elements = mutableListOf<Int>()
+    for (i in 1..cells) {
+        elements.add(0)
+    }
+
+    var iElem = cells / 2
+    var iInstr = 0
+    var numOfCycle = 0
+    while (iInstr < instructions.size) {
+        if (instructions[iInstr] == ">") iElem++
+        else if (instructions[iInstr] == "<") iElem--
+        else if (instructions[iInstr] == " ")
+        else if (instructions[iInstr] == "+") elements[iElem]++
+        else if (instructions[iInstr] == "-") elements[iElem]--
+        else if (instructions[iInstr] == "[") {
+            if (elements[iElem] == 0)
+                while (instructions[iInstr] != "]")
+                    iInstr++
+            else {
+                numOfCycle = true
+                continue
+            }
+        } else if (instructions[iInstr] == "]") {
+
+        }
+
+    }
+
+    return listOf()
+}
+        */

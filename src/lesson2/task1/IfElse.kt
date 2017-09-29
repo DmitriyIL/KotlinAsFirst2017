@@ -55,10 +55,11 @@ fun timeForHalfWay(t1: Double, v1: Double,
     val s2 = t2 * v2
     val s3 = t3 * v3
     val s = s1 + s2 + s3
+    val halfS = s / 2
     return when {
-        s / 2 <= s1  ->  (s / 2) / v1
-        s / 2 <= s1 + s2  ->  t1 + (s / 2 - s1) / v2
-        else  ->  t1 + t2 + (s / 2 - s1 - s2) / v3
+        halfS <= s1  ->  halfS / v1
+        halfS <= s1 + s2  ->  t1 + (halfS - s1) / v2
+        else  ->  t1 + t2 + (halfS - s1 - s2) / v3
     }
 }
 
@@ -74,8 +75,8 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    val threatFrom1: Boolean = (kingX == rookX1) || (kingY == rookY1)
-    val threatFrom2: Boolean = (kingX == rookX2) || (kingY == rookY2)
+    val threatFrom1 = (kingX == rookX1) || (kingY == rookY1)
+    val threatFrom2 = (kingX == rookX2) || (kingY == rookY2)
     return if (!threatFrom1 && !threatFrom2) 0
     else if (threatFrom1 && !threatFrom2) 1
     else if (!threatFrom1 && threatFrom2) 2
@@ -95,8 +96,8 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    val threatFromRook: Boolean = (kingX == rookX) || (kingY == rookY)
-    val threatFromBishop: Boolean = (Math.abs(kingX - bishopX)) == (Math.abs(kingY - bishopY))
+    val threatFromRook = (kingX == rookX) || (kingY == rookY)
+    val threatFromBishop = (Math.abs(kingX - bishopX)) == (Math.abs(kingY - bishopY))
     return if (!threatFromRook && !threatFromBishop) 0
     else if (threatFromRook && !threatFromBishop) 1
     else if (!threatFromRook && threatFromBishop) 2
@@ -114,8 +115,7 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
 fun triangleKind(a: Double, b: Double, c: Double): Int {
     val max = max(max(a, b), c)
     val min = min(min(a, b), c)
-    val avr = max(min(a, b), min(max(a, b), c))
-
+    val avr = a + b + c - max - min
     val cos = (pow(min, 2.0) + pow(avr, 2.0) - pow(max, 2.0)) / (2 * avr * min)
     return if ((cos > 0) && (cos < 1)) 0
     else if (cos == 0.0) 1

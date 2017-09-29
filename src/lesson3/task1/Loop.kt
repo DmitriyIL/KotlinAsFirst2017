@@ -67,10 +67,10 @@ fun digitCountInNumber(n: Int, m: Int): Int =
 fun digitNumber(n: Int): Int {
     var count = 0
     var number = abs(n)
-    do{
+     do {
         number /= 10
         count++
-    }while (number > 0)
+    } while (number > 0)
  return count
 }
 
@@ -81,17 +81,14 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    var n1 = 0
-    var n2 = 1
-    for (i in 2..n){
-        n2 += n1
-      n1 = n2 - n1
-   }
-   return n2
-    /*
-    return if ((n == 1) || (n == 2)) 1
-       else (fib (n-1) + fib (n- 2))
-*/
+var n1 = 0
+var n2 = 1
+for (i in 2..n) {
+    n2 += n1
+  n1 = n2 - n1
+}
+return n2
+
 }
 
 /**
@@ -104,7 +101,7 @@ fun lcm(m: Int, n: Int): Int {
     var k = 1
     val max = max(m, n)
     for (i in max..m*n) {
-        if ((i % m == 0) && (i % n == 0)) {
+        if (i % m == 0 && i % n == 0) {
             k = i
             break
         }
@@ -145,9 +142,7 @@ fun maxDivisor(n: Int): Int {
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
     for (i in 2..m)
-        if (m % i == 0) {
-            if (n % i == 0) return false
-        }
+        if (m % i == 0 && n % i == 0) return false
     return true
 }
 
@@ -161,10 +156,9 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in 0..sqrt(m.toDouble()).toInt()+1)
-        if (sqr(i.toDouble()) <= n) {
+    for (i in 0..m)                                 // for (i in 0..sqrt(m.toDouble()).toInt() + 1)
+        if (sqr(i.toDouble()) <= n)
             if (sqr(i.toDouble()) >= m) return true
-        }
     return false
 }
 
@@ -177,20 +171,20 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  */
 fun sin(x: Double, eps: Double): Double {
     var arg = x
-    while (arg > 2*PI) {
-        arg -= 2*PI
+    while (arg > 2 * PI) {
+        arg -= 2 * PI
     }
-    while (arg < -2*PI) {
-        arg += 2*PI
+    while (arg < -2 * PI) {
+        arg += 2 * PI
     }
     var sin = arg
     var k = 3
     var sing = -1
-    while (abs(pow(arg, k.toDouble()) / factorial(k)) >= eps ){
+    while (abs(pow(arg, k.toDouble()) / factorial(k)) >= eps ) {
         sin +=  sing * pow(arg, k.toDouble()) / factorial(k)
         sing *= -1
         k += 2
-        }
+    }
 
     return sin
 }
@@ -204,11 +198,11 @@ fun sin(x: Double, eps: Double): Double {
  */
 fun cos(x: Double, eps: Double): Double {
     var arg = x
-    while (arg > 2*PI) {
-        arg -= 2*PI
+    while (arg > 2 * PI) {
+        arg -= 2 * PI
     }
-    while (arg < -2*PI) {
-        arg += 2*PI
+    while (arg < -2 * PI) {
+        arg += 2 * PI
     }
     var cos = 1.0
     var k = 2
@@ -230,12 +224,10 @@ fun cos(x: Double, eps: Double): Double {
  */
 fun revert(n: Int): Int {
     var remaningNum = n
-    var lastFigure :Int
     var revertNum = 0
     do {
         revertNum *= 10
-        lastFigure = remaningNum % 10
-        revertNum += lastFigure
+        revertNum += remaningNum % 10
         remaningNum /= 10
     }while (remaningNum > 0)
 return revertNum
@@ -248,10 +240,7 @@ return revertNum
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean {
-    val revertN = revert (n)
-    return revertN == n
-}
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя
@@ -262,13 +251,10 @@ fun isPalindrome(n: Int): Boolean {
 fun hasDifferentDigits(n: Int): Boolean {
     var num = n
     var n1 = num % 10
-    var n2 :Int
     if (num < 10) return false
     num /= 10
     do {
-        n2 = num % 10
-        if (n1 != n2) return true
-        n1 = n2
+        if (n1 != num % 10) return true
         num /= 10
     } while (num > 9)
 return false
@@ -287,12 +273,9 @@ fun squareSequenceDigit(n: Int): Int {
     var i = 1.0
     while (remainLength > 0) {
         val sqrI = sqr(i)
-        var figureAMT = 1.0 //кол-во цифр в i^2
-        while (sqrI.toInt() / pow(10.0, figureAMT).toInt() != 0) {
-            figureAMT++
-        }
+        var figureAMT = digitNumber(sqrI.toInt())
         i++
-        remainLength -= figureAMT.toInt()
+        remainLength -= figureAMT
         if (remainLength <= 0){
             theNum = sqrI.toInt()
         for (j in remainLength..0)
@@ -315,12 +298,9 @@ fun fibSequenceDigit(n: Int): Int {
     var i = 1
     while (remainLength > 0) {
         val fibI = fib(i)
-        var figureAMT = 1.0
-        while (fibI / pow(10.0, figureAMT).toInt() != 0) {
-            figureAMT++
-        }
+        val figureAMT = digitNumber(fibI)
         i++
-        remainLength -= figureAMT.toInt()
+        remainLength -= figureAMT
         if (remainLength <= 0){
             theNum = fibI
             for (j in remainLength..0)
@@ -328,4 +308,5 @@ fun fibSequenceDigit(n: Int): Int {
         }
     }
     return theNum
+
 }
