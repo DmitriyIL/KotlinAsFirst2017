@@ -403,7 +403,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var count = 0
     var iCell = cells / 2
     var iCom = 0
-   // try {
         while (iCom < commands.length) {
             if (count == limit) break
             if (commands[iCom] == '>') iCell++
@@ -411,18 +410,26 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             else if (commands[iCom] == ' ')
             else if (commands[iCom] == '+') elements[iCell]++
             else if (commands[iCom] == '-') elements[iCell]--
-            else if (commands[iCom] == '[') {
-                if (elements[iCell] == 0) while (commands[iCom] != ']') iCom++
+            else if (commands[iCom] == '[')  {
+                if (elements[iCell] == 0) {
+                    var openCycles = 0
+                    while (iCom != commands.length){
+                        iCom++
+                        if (commands[iCom] == '[') openCycles++
+                        if (commands[iCom] == ']') openCycles--
+                        if (openCycles == -1) break
+                    }
+                }
                 else listOfCycles.add(0, iCom)
-            } else if (commands[iCom] == ']') {
+            }
+            else if (commands[iCom] == ']') {
                 if (elements[iCell] != 0) iCom = listOfCycles[0]
                 else listOfCycles.removeAt(0)
-            } else throw e
+            }
+            else throw e
             if (iCell >= cells || iCell < 0) throw out
             count++
             iCom++
         }
-    //} catch (out : IndexOutOfBoundsException) { throw IllegalStateException()}
     return elements
 }
-
