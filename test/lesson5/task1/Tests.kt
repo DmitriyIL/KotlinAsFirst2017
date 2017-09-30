@@ -108,7 +108,7 @@ class Tests {
     @Test
     @Tag("Hard")
     fun fromRoman() {
-        assertEquals(-1, fromRoman(""))
+        assertEquals(0, fromRoman(""))
         assertEquals(1978, fromRoman("MCMLXXVIII"))
         assertEquals(1, fromRoman("I"))
         assertEquals(3000, fromRoman("MMM"))
@@ -120,6 +120,9 @@ class Tests {
     @Test
     @Tag("Impossible")
     fun computeDeviceCells() {
+        assertEquals(listOf<Int>(), computeDeviceCells(0, "", 10000))
+        assertEquals(listOf(0, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0),
+                computeDeviceCells(11, "<<<<< + >>>>>>>>>> --[<-] >+[>+] >++[--< <[<] >+[>+] >++]", 10000))
         assertEquals(listOf(0, 0, 0, 0, 0, 1, 1, 1, 1, 1), computeDeviceCells(10, " +>+>+>+>+", 10000))
         assertEquals(listOf(-1, -1, -1, -1, -1, 0, 0, 0, 0, 0), computeDeviceCells(10, "<-<-<-<-<-", 10000))
         assertEquals(listOf(1, 1, 1, 1, 1, 0, 0, 0, 0, 0), computeDeviceCells(10, "- <<<<< +[>+]", 10000))

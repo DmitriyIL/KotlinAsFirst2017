@@ -88,7 +88,6 @@ for (i in 2..n) {
   n1 = n2 - n1
 }
 return n2
-
 }
 
 /**
@@ -156,7 +155,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in 0..m)                                 // for (i in 0..sqrt(m.toDouble()).toInt() + 1)
+    for (i in 0..m)
         if (sqr(i.toDouble()) <= n)
             if (sqr(i.toDouble()) >= m) return true
     return false
@@ -185,7 +184,6 @@ fun sin(x: Double, eps: Double): Double {
         sing *= -1
         k += 2
     }
-
     return sin
 }
 
@@ -212,7 +210,6 @@ fun cos(x: Double, eps: Double): Double {
         sing *= -1
         k += 2
     }
-
     return cos
 }
 
@@ -223,13 +220,12 @@ fun cos(x: Double, eps: Double): Double {
  * Не использовать строки при решении задачи.
  */
 fun revert(n: Int): Int {
-    var remaningNum = n
+    var remainNum = n
     var revertNum = 0
     do {
-        revertNum *= 10
-        revertNum += remaningNum % 10
-        remaningNum /= 10
-    }while (remaningNum > 0)
+        revertNum = revertNum * 10 + remainNum % 10
+        remainNum /= 10
+    }while (remainNum > 0)
 return revertNum
 }
 
@@ -250,7 +246,7 @@ fun isPalindrome(n: Int): Boolean = n == revert(n)
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var num = n
-    var n1 = num % 10
+    val n1 = num % 10
     if (num < 10) return false
     num /= 10
     do {
@@ -273,7 +269,7 @@ fun squareSequenceDigit(n: Int): Int {
     var i = 1.0
     while (remainLength > 0) {
         val sqrI = sqr(i)
-        var figureAMT = digitNumber(sqrI.toInt())
+        val figureAMT = digitNumber(sqrI.toInt())
         i++
         remainLength -= figureAMT
         if (remainLength <= 0){

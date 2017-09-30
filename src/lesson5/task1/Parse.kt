@@ -175,7 +175,7 @@ fun bestHighJump(jumps: String): Int {
     val parts = jumps.split(" ")
     try {
         for (i in 0 until parts.size) {
-            var elements = parts[i].split("")
+            val elements = parts[i].split("")
             for (el in elements)
                 if (el == "+") {
                         results.add(parts[i - 1].toInt())
@@ -201,7 +201,7 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val e = IllegalArgumentException()
-    if (expression == "") return throw e
+    if (expression == "") throw e
     var parts = expression.split(" ")
     parts = parts.filter { it != ""}
     var elements = parts[0].split("")
@@ -291,7 +291,7 @@ fun mostExpensive(description: String): String {
 
     try {
        for (elements in goods) {
-           var el = elements.split(" ")
+           val el = elements.split(" ")
            names.add(el[0])
            prices.add(el[1].toDouble())
        }
@@ -385,49 +385,44 @@ fun fromRoman(roman: String): Int {
 
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    var e = IllegalArgumentException()
-   // var instructions = commands.split("")
-   // instructions = instructions.filter { it != "" }
-
+    val out = IllegalStateException()
+    val e = IllegalArgumentException()
     var AMT = 0
     for (i in 0 until commands.length) {
         if (commands[i] == '[') AMT++
         else if (commands[i] == ']') AMT--
         if (AMT < 0) throw e
     }
-    if (AMT != 0 || commands == "")
+    if (AMT != 0)
         throw e
-
     val elements = mutableListOf<Int>()
     for (i in 1..cells) {
         elements.add(0)
     }
-
+    val listOfCycles = mutableListOf<Int>()
     var count = 0
-    var iElem = cells / 2
+    var iCell = cells / 2
     var iCom = 0
-    while (iCom < commands.length) {
-        count++
-        if (commands[iCom] == '>') iElem++
-        else if (commands[iCom] == '<') iElem--
-        else if (commands[iCom] == ' ')
-        else if (commands[iCom] == '+') elements[iElem]++
-        else if (commands[iCom] == '-') elements[iElem]--
-        else if (commands[iCom] == '[') {
-            if (elements[iElem] == 0)
-                while (commands[iCom] != ']')
-                    iCom++
-            else
-                continue
-        } else if (commands[iCom] == ']') {
-            if (elements[iElem] != 0)
-                while (commands[iCom] != '[')
-                    iCom--
-            else continue
+   // try {
+        while (iCom < commands.length) {
+            if (count == limit) break
+            if (commands[iCom] == '>') iCell++
+            else if (commands[iCom] == '<') iCell--
+            else if (commands[iCom] == ' ')
+            else if (commands[iCom] == '+') elements[iCell]++
+            else if (commands[iCom] == '-') elements[iCell]--
+            else if (commands[iCom] == '[') {
+                if (elements[iCell] == 0) while (commands[iCom] != ']') iCom++
+                else listOfCycles.add(0, iCom)
+            } else if (commands[iCom] == ']') {
+                if (elements[iCell] != 0) iCom = listOfCycles[0]
+                else listOfCycles.removeAt(0)
+            } else throw e
+            if (iCell >= cells || iCell < 0) throw out
+            count++
+            iCom++
         }
-        else throw e
-        iElem++
-    }
-
+    //} catch (out : IndexOutOfBoundsException) { throw IllegalStateException()}
     return elements
 }
+
