@@ -80,7 +80,7 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int {
+fun fib(n: Int): Int { // форм бине
 var n1 = 0
 var n2 = 1
 for (i in 2..n) {
@@ -156,8 +156,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     for (i in 0..m)
-        if (sqr(i.toDouble()) <= n)
-            if (sqr(i.toDouble()) >= m) return true
+        if (sqr(i.toDouble()) <= n  &&  sqr(i.toDouble()) >= m) return true
     return false
 }
 
@@ -169,13 +168,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var arg = x
-    while (arg > 2 * PI) {
-        arg -= 2 * PI
-    }
-    while (arg < -2 * PI) {
-        arg += 2 * PI
-    }
+    val arg = x % (2 * PI)
     var sin = arg
     var k = 3
     var sing = -1
@@ -195,13 +188,7 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    var arg = x
-    while (arg > 2 * PI) {
-        arg -= 2 * PI
-    }
-    while (arg < -2 * PI) {
-        arg += 2 * PI
-    }
+    val arg = x % (2 * PI)
     var cos = 1.0
     var k = 2
     var sing = -1
@@ -225,8 +212,8 @@ fun revert(n: Int): Int {
     do {
         revertNum = revertNum * 10 + remainNum % 10
         remainNum /= 10
-    }while (remainNum > 0)
-return revertNum
+    } while (remainNum > 0)
+    return revertNum
 }
 
 /**
@@ -253,7 +240,7 @@ fun hasDifferentDigits(n: Int): Boolean {
         if (n1 != num % 10) return true
         num /= 10
     } while (num > 9)
-return false
+    return false
 }
 
 /**
@@ -264,6 +251,24 @@ return false
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
 fun squareSequenceDigit(n: Int): Int {
+    var row = mutableListOf(0)
+    var i = 0
+    while (row.size - 1 < n) {
+        i++
+        val digits = mutableListOf<Int>()
+        var sqrI = sqr(i.toDouble()).toInt()
+        while (sqrI > 0) {
+            digits.add(0, sqrI % 10)
+            sqrI /= 10
+        }
+        row = (row + digits).toMutableList()
+    }
+    return row[n]
+}
+
+
+/*  Тоже работает:
+    fun squareSequenceDigit(n: Int): Int {
     var remainLength = n
     var theNum = 1
     var i = 1.0
@@ -279,7 +284,7 @@ fun squareSequenceDigit(n: Int): Int {
         }
     }
 return theNum
-}
+} */
 
 /**
  * Сложная
@@ -297,12 +302,10 @@ fun fibSequenceDigit(n: Int): Int {
         val figureAMT = digitNumber(fibI)
         i++
         remainLength -= figureAMT
-        if (remainLength <= 0){
+        if (remainLength <= 0) {
             theNum = fibI
-            for (j in remainLength..0)
-                if (j == 0) theNum %= 10 else theNum /= 10
+            for (j in remainLength..0) if (j == 0) theNum %= 10 else theNum /= 10
         }
     }
     return theNum
-
 }

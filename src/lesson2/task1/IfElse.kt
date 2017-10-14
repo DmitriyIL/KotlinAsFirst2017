@@ -1,7 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson2.task1
 
-import lesson1.task1.discriminant
+import lesson1.task1.*
 import java.lang.Math.*
 
 /**
@@ -54,8 +54,7 @@ fun timeForHalfWay(t1: Double, v1: Double,
     val s1 = t1 * v1
     val s2 = t2 * v2
     val s3 = t3 * v3
-    val s = s1 + s2 + s3
-    val halfS = s / 2
+    val halfS = (s1 + s2 + s3) / 2
     return when {
         halfS <= s1  ->  halfS / v1
         halfS <= s1 + s2  ->  t1 + (halfS - s1) / v2

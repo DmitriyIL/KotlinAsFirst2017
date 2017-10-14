@@ -116,16 +116,15 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    var cutPhone = phone
     var number = ""
+    var parts = phone.split("").filter { it != "" && it != " " }.toMutableList()
     try {
-        if (cutPhone[0] == '+') {
+        if (parts[0] == "+" && parts.size > 1) {
             number = "+"
-            cutPhone = cutPhone.substring(1)
+            parts.removeAt(0)
         }
-    } catch (e : IndexOutOfBoundsException) { return ""}
-    var parts = cutPhone.split("")
-    parts = parts.filter{(it !=  "-") && (it != "+") && (it != "") && (it != " ") && (it != "(") && (it != ")")}
+    } catch (e : IndexOutOfBoundsException) { return "" }
+    parts = parts.filter{ it !=  "-" && it != "+" && it != "(" && it != ")" }.toMutableList()
     for (i in 0 until parts.size) {
         if (parts[i] in ("0".."9")) number += parts[i]
         else return ""
@@ -202,34 +201,29 @@ fun bestHighJump(jumps: String): Int {
 fun plusMinus(expression: String): Int {
     val e = IllegalArgumentException()
     if (expression == "") throw e
-    var parts = expression.split(" ")
-    parts = parts.filter { it != ""}
-    var elements = parts[0].split("")
-    elements = elements.filter { it != ""}
-    for ( el in elements){
-        if ( el in ("0".."9")) continue
-        else{
+    val parts = expression.split(" ").filter { it != "" }
+    var elements = parts[0].split("").filter { it != "" }
+    for (el in elements) {
+        if (el in ("0".."9")) continue
+        else {
             throw e
         }
     }
     var result = parts[0].toInt()
-    var num : Int
+    var num: Int
     for (i in 1 until parts.size step 2) {
-        elements = parts[i+1].split("")
-        elements = elements.filter { it != ""}
-        for (el in elements)
-            if (el in ("0".."9")) continue
-            else throw e
-        num = parts[i+1].toInt()
-
-        when (parts[i]){
+        elements = parts[i + 1].split("")
+        elements = elements.filter { it != "" }
+        for (el in elements) if (el in ("0".."9")) continue
+        else throw e
+        num = parts[i + 1].toInt()
+        when (parts[i]) {
             "+" -> result += num
             "-" -> result -= num
             else -> throw e
         }
     }
-
-return result
+    return result
 }
 
 /**
@@ -320,29 +314,26 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
-    if (roman == "") return 0
+    if (roman == "") return -1
     val digits1 = arrayOf("I", "V", "X", "L", "C", "D", "M", "error")
     val digits2 = arrayOf(1, 5, 10, 50, 100, 500, 1000)
     var sings = roman.split("")
     sings = sings.filter { it != "" }
-
     var theNum = 0
     var currentNum = 0
     var pastNum = 0
-
-    for (i in sings.size - 1 downTo 0){
-        for (j in 0..7){
+    for (i in sings.size - 1 downTo 0) {
+        for (j in 0..7) {
             if (sings[i] == digits1[j]) {
                 currentNum = digits2[j]
                 break
             }
             if (j == 7) return -1
         }
-    if (currentNum >= pastNum) theNum += currentNum
+        if (currentNum >= pastNum) theNum += currentNum
         else theNum -= currentNum
-    pastNum = currentNum
+        pastNum = currentNum
     }
-
     return theNum
 }
 
@@ -393,8 +384,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         else if (commands[i] == ']') AMT--
         if (AMT < 0) throw e
     }
-    if (AMT != 0)
-        throw e
+    if (AMT != 0) throw e
     val elements = mutableListOf<Int>()
     for (i in 1..cells) {
         elements.add(0)
@@ -403,33 +393,30 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var count = 0
     var iCell = cells / 2
     var iCom = 0
-        while (iCom < commands.length) {
-            if (count == limit) break
-            if (commands[iCom] == '>') iCell++
-            else if (commands[iCom] == '<') iCell--
-            else if (commands[iCom] == ' ')
-            else if (commands[iCom] == '+') elements[iCell]++
-            else if (commands[iCom] == '-') elements[iCell]--
-            else if (commands[iCom] == '[')  {
-                if (elements[iCell] == 0) {
-                    var openCycles = 0
-                    while (iCom != commands.length){
-                        iCom++
-                        if (commands[iCom] == '[') openCycles++
-                        if (commands[iCom] == ']') openCycles--
-                        if (openCycles == -1) break
-                    }
+    while (iCom < commands.length) {
+        if (count == limit) break
+        if (commands[iCom] == '>') iCell++
+        else if (commands[iCom] == '<') iCell--
+        else if (commands[iCom] == ' ')
+        else if (commands[iCom] == '+') elements[iCell]++
+        else if (commands[iCom] == '-') elements[iCell]--
+        else if (commands[iCom] == '[') {
+            if (elements[iCell] == 0) {
+                var openCycles = 0
+                while (iCom != commands.length) {
+                    iCom++
+                    if (commands[iCom] == '[') openCycles++
+                    if (commands[iCom] == ']') openCycles--
+                    if (openCycles == -1) break
                 }
-                else listOfCycles.add(0, iCom)
-            }
-            else if (commands[iCom] == ']') {
-                if (elements[iCell] != 0) iCom = listOfCycles[0]
-                else listOfCycles.removeAt(0)
-            }
-            else throw e
-            if (iCell >= cells || iCell < 0) throw out
-            count++
-            iCom++
-        }
+            } else listOfCycles.add(0, iCom)
+        } else if (commands[iCom] == ']') {
+            if (elements[iCell] != 0) iCom = listOfCycles[0]
+            else listOfCycles.removeAt(0)
+        } else throw e
+        if (iCell >= cells || iCell < 0) throw out
+        count++
+        iCom++
+    }
     return elements
 }

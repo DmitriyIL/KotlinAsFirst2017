@@ -1,7 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson4.task1
 
-import lesson1.task1.discriminant
+import lesson1.task1.*
 import java.lang.Math.*
 
 /**
@@ -107,11 +107,7 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double {
-    val sqrV = v.map { it * it }
-    val sumSqtV = sqrV.sum()
-return sqrt(sumSqtV)
-}
+fun abs(v: List<Double>): Double = sqrt(v.map { it * it }.sum())
 
 /**
  * Простая
@@ -119,9 +115,8 @@ return sqrt(sumSqtV)
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double {
-    val size = list.size
     if (list.isEmpty())  return 0.0
-    return list.sum() / size
+    return list.sum() / list.size
 }
 
 /**
@@ -135,8 +130,9 @@ fun mean(list: List<Double>): Double {
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
     for (i in 0 until list.size) list[i] -= mean
-return list
+    return list
 }
+
 /**
  * Средняя
  *
@@ -355,7 +351,6 @@ fun russian(n: Int): String {
     val thirdArr = arrayOf("j", "j", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
     val fourthArr = arrayOf("j", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
     val fifthArr = arrayOf("две", "три", "четыре")
-
     val num = mutableListOf<String>()
     if ((n % 100 <= 19) && (n % 100 >= 10)) {
         num.add(secondArr[n % 100 - 10])
@@ -364,9 +359,7 @@ fun russian(n: Int): String {
         num.add(0, thirdArr[n / 10 % 10])
     }
     num.add(0, fourthArr[n / 100 % 10])
-
     val half = n / 1000
-
     if (half > 0) {
         if (half % 100 == 0) num.add(0, "тысяч")
         else if ((half % 100 <= 19) && (half % 100 >= 10)) {

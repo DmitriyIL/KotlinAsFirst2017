@@ -62,5 +62,4 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
         if ((a <= s) || (b <= s)) return true
 }
     return false
-
 }

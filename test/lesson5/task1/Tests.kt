@@ -53,8 +53,8 @@ class Tests {
     @Test
     @Tag("Normal")
     fun flattenPhoneNumber() {
-        assertEquals("", flattenPhoneNumber(""))
         assertEquals("+79211234567", flattenPhoneNumber("+7 (921) 123-45-67"))
+        assertEquals("", flattenPhoneNumber(" +"))
         assertEquals("123456798", flattenPhoneNumber("12 --  34- 5 -- 67 -98"))
         assertEquals("", flattenPhoneNumber("ab-123"))
         assertEquals("+12345", flattenPhoneNumber("+12 (3) 4-5"))
@@ -82,6 +82,8 @@ class Tests {
     @Test
     @Tag("Hard")
     fun plusMinus() {
+        assertEquals(16, plusMinus("11 - 15 + 20"))
+        assertEquals(0, plusMinus("0"))
         assertEquals(0, plusMinus("0"))
         assertEquals(4, plusMinus("2 + 2"))
         assertEquals(6, plusMinus("2 + 31 - 40 + 13"))
@@ -108,7 +110,7 @@ class Tests {
     @Test
     @Tag("Hard")
     fun fromRoman() {
-        assertEquals(0, fromRoman(""))
+        assertEquals(-1, fromRoman(""))
         assertEquals(1978, fromRoman("MCMLXXVIII"))
         assertEquals(1, fromRoman("I"))
         assertEquals(3000, fromRoman("MMM"))
