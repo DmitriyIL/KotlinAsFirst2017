@@ -139,7 +139,8 @@ class Line private constructor(val b: Double, val angle: Double) {
         assert(angle >= 0 && angle < Math.PI) { "Incorrect line angle: $angle" }
     }
 
-    constructor(point: Point, angle: Double): this(point.y * Math.cos(angle) - point.x * Math.sin(angle), angle)
+    constructor(point: Point, angle: Double): this(if (angle != PI / 2) point.y - Math.tan(angle) * point.x
+    else point.y * Math.cos(angle) - point.x * Math.sin(angle), angle)
 
     /**
      * Средняя
@@ -147,7 +148,19 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-    fun crossPoint(other: Line): Point = TODO()
+    fun crossPoint(other: Line) : Point {
+        val x = when {
+            angle == PI / 2 -> -b
+            other.angle == PI / 2 -> -other.b
+            else -> (other.b - b) / (tan(angle) - tan(other.angle))
+        }
+        val y = when {
+            angle == 0.0 -> b
+            other.angle == 0.0 -> other.b
+            else -> tan(angle) * x + b
+        }
+        return Point (x, y)
+    }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
@@ -165,21 +178,24 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = TODO()
+fun lineBySegment(s: Segment): Line =
+        Line(s.begin, atan(abs(s.end.y - s.begin.y) / abs(s.end.x - s.begin.x)))
 
 /**
  * Средняя
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line =
+        Line(a, atan(abs(a.y - b.y) / abs(a.x - b.x)))
 
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line =
+        Line(Segment(a, b).center(), PI / 2 - atan(abs(a.y - b.y) / abs(a.x - b.x)))
 
 /**
  * Средняя
