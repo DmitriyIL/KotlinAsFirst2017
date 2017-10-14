@@ -97,15 +97,15 @@ return n2
  * минимальное число k, которое делится и на m и на n без остатка.
  */
 fun lcm(m: Int, n: Int): Int {
-    var k = 1
-    val max = max(m, n)
-    for (i in max..m*n) {
-        if (i % m == 0 && i % n == 0) {
-            k = i
-            break
+    var max = max(m, n)
+    var min = min(m, n)
+    var c : Int
+    while (min > 0){
+        c = min
+        min = max % min
+        max = c
         }
-    }
-    return k
+    return m*n/max
 }
 
 /**
@@ -250,24 +250,6 @@ fun hasDifferentDigits(n: Int): Boolean {
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-fun squareSequenceDigit(n: Int): Int {
-    var row = mutableListOf(0)
-    var i = 0
-    while (row.size - 1 < n) {
-        i++
-        val digits = mutableListOf<Int>()
-        var sqrI = sqr(i.toDouble()).toInt()
-        while (sqrI > 0) {
-            digits.add(0, sqrI % 10)
-            sqrI /= 10
-        }
-        row = (row + digits).toMutableList()
-    }
-    return row[n]
-}
-
-
-/*  Тоже работает:
     fun squareSequenceDigit(n: Int): Int {
     var remainLength = n
     var theNum = 1
@@ -284,7 +266,7 @@ fun squareSequenceDigit(n: Int): Int {
         }
     }
 return theNum
-} */
+}
 
 /**
  * Сложная
