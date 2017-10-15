@@ -158,17 +158,6 @@ class Line private constructor(val b: Double, val angle: Double) {
             other.angle == 0.0 -> other.b
             else -> (x * sin(angle) + b) / cos(angle)
         }
-        /*val x = when {
-            angle == PI / 2 -> -b
-            other.angle == PI / 2 -> -other.b
-            else -> (other.b - b) / (tan(angle) - tan(other.angle))
-        }
-
-        val y = when {
-            angle == 0.0 -> b
-            other.angle == 0.0 -> other.b
-            else -> tan(angle) * x + b
-        }*/
         return Point (x, y)
 
     }
@@ -213,7 +202,7 @@ fun lineByPoints(a: Point, b: Point): Line {
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
-    val arctg = PI / 2 - atan((a.y - b.y) / (a.x - b.x))
+    val arctg = atan((a.y - b.y) / (a.x - b.x)) - PI / 2
     val angle = if (arctg < 0.0) PI + arctg else arctg
     return Line(Segment(a, b).center(), angle)
 }
