@@ -110,13 +110,13 @@ data class Segment(val begin: Point, val end: Point) {
  */
 fun diameter(vararg points: Point): Segment {
     if (points.size < 2) throw IllegalArgumentException()
-    var maxSeg = Segment(Point(0.0, 0.0), Point(0.0, 0.0))
+    var max = Segment(points[0], points[1])
     for (i in 0 until points.size) {
         for (j in i + 1 until points.size)
-            if (points[i].distance(points[j]) > maxSeg.begin.distance(maxSeg.end))
-                maxSeg = Segment(points[i], points[j])
+            if (points[i].distance(points[j]) > max.begin.distance(max.end))
+                max = Segment(points[i], points[j])
     }
-    return maxSeg
+    return max
 }
 
 /**
@@ -189,24 +189,34 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line =
-        Line(s.begin, atan(abs(s.end.y - s.begin.y) / abs(s.end.x - s.begin.x)))
+fun lineBySegment(s: Segment): Line {
+    val arctg = atan((s.begin.y - s.end.y) / (s.begin.x - s.end.x))
+    val angle = if (arctg < 0.0) PI + arctg else arctg
+    return Line(s.begin, angle)
+}
 
 /**
  * Средняя
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line =
-        Line(a, atan(abs(a.y - b.y) / abs(a.x - b.x)))
+fun lineByPoints(a: Point, b: Point): Line {
+    val arctg = atan((a.y - b.y) / (a.x - b.x))
+    val angle = if (arctg < 0.0) PI + arctg else arctg
+    return Line(a, angle)
+}
+
 
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line =
-        Line(Segment(a, b).center(), PI / 2 - atan(abs(a.y - b.y) / abs(a.x - b.x)))
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val arctg = PI / 2 - atan((a.y - b.y) / (a.x - b.x))
+    val angle = if (arctg < 0.0) PI + arctg else arctg
+    return Line(Segment(a, b).center(), angle)
+}
 
 /**
  * Средняя
@@ -214,7 +224,16 @@ fun bisectorByPoints(a: Point, b: Point): Line =
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    if (circles.size < 2) throw IllegalArgumentException()
+    var min = Pair(circles[0], circles[1])
+    for (i in 0 until circles.size)
+        for ( j in i+1 until circles.size){
+            if (min.first.distance(min.second) > circles[i].distance(circles[j]))
+                min = Pair(circles[i], circles[j])
+        }
+    return min
+}
 
 /**
  * Сложная
