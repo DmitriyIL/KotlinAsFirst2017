@@ -139,8 +139,7 @@ class Line private constructor(val b: Double, val angle: Double) {
         assert(angle >= 0 && angle < Math.PI) { "Incorrect line angle: $angle" }
     }
 
-    constructor(point: Point, angle: Double): this(if (angle != PI / 2) point.y - Math.tan(angle) * point.x
-    else point.y * Math.cos(angle) - point.x * Math.sin(angle), angle)
+    constructor(point: Point, angle: Double): this(point.y * Math.cos(angle) - point.x * Math.sin(angle), angle)
 
     /**
      * Средняя
@@ -152,14 +151,26 @@ class Line private constructor(val b: Double, val angle: Double) {
         val x = when {
             angle == PI / 2 -> -b
             other.angle == PI / 2 -> -other.b
-            else -> (other.b - b) / (tan(angle) - tan(other.angle))
+            else -> (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
         }
         val y = when {
             angle == 0.0 -> b
             other.angle == 0.0 -> other.b
-            else -> tan(angle) * x + b
+            else -> (x * sin(angle) + b) / cos(angle)
         }
+        /*val x = when {
+            angle == PI / 2 -> -b
+            other.angle == PI / 2 -> -other.b
+            else -> (other.b - b) / (tan(angle) - tan(other.angle))
+        }
+
+        val y = when {
+            angle == 0.0 -> b
+            other.angle == 0.0 -> other.b
+            else -> tan(angle) * x + b
+        }*/
         return Point (x, y)
+
     }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
