@@ -80,7 +80,7 @@ fun digitNumber(n: Int): Int {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int { // форм бине
+fun fib(n: Int): Int {
 var n1 = 0
 var n2 = 1
 for (i in 2..n) {
@@ -89,24 +89,23 @@ for (i in 2..n) {
 }
 return n2
 }
-
+ fun nod(m: Int, n: Int) : Int {
+     var max = max(m, n)
+     var min = min(m, n)
+     while (min > 0){
+         val c = min
+         min = max % min
+         max = c
+     }
+     return max
+ }
 /**
  * Простая
  *
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка.
  */
-fun lcm(m: Int, n: Int): Int {
-    var max = max(m, n)
-    var min = min(m, n)
-    var c : Int
-    while (min > 0){
-        c = min
-        min = max % min
-        max = c
-        }
-    return m*n/max
-}
+fun lcm(m: Int, n: Int): Int = nod(m, n) * m * n
 
 /**
  * Простая
@@ -114,9 +113,9 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (i in 2..n) {
-        if (n % i == 0) return i
-    }
+    for (i in 2 until n)
+        if (n % i == 0)
+            return i
     return n
 }
 
@@ -126,9 +125,9 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (i in n-1 downTo 2) {
-        if (n % i == 0) return i
-    }
+    for (i in n-1 downTo 2)
+        if (n % i == 0)
+            return i
     return 1
 }
 
@@ -139,11 +138,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..m)
-        if (m % i == 0 && n % i == 0) return false
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
 
 
 
@@ -155,7 +150,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in 0..m)
+    for (i in 0..sqrt(n.toDouble()).toInt())
         if (sqr(i.toDouble()) <= n  &&  sqr(i.toDouble()) >= m) return true
     return false
 }
@@ -169,13 +164,15 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  */
 fun sin(x: Double, eps: Double): Double {
     val arg = x % (2 * PI)
-    var sin = arg
-    var k = 3
-    var sing = -1
-    while (abs(pow(arg, k.toDouble()) / factorial(k)) >= eps ) {
-        sin +=  sing * pow(arg, k.toDouble()) / factorial(k)
+    var sin = 0.0
+    var mem = arg
+    var k = 1
+    var sing = 1
+    while (abs(mem) >= eps ) {
+        sin +=  sing * mem
         sing *= -1
         k += 2
+        mem *= sqr(arg) / k / (k - 1)
     }
     return sin
 }
@@ -189,13 +186,15 @@ fun sin(x: Double, eps: Double): Double {
  */
 fun cos(x: Double, eps: Double): Double {
     val arg = x % (2 * PI)
-    var cos = 1.0
-    var k = 2
-    var sing = -1
-    while (abs(pow(arg, k.toDouble()) / factorial(k)) >= eps) {
-        cos += sing * pow(arg, k.toDouble()) / factorial(k)
+    var cos = 0.0
+    var mem = 1.0
+    var k = 0
+    var sing = 1
+    while (abs(mem) >= eps) {
+        cos += sing * mem
         sing *= -1
         k += 2
+        mem *= sqr(arg) / k / (k - 1)
     }
     return cos
 }
@@ -232,14 +231,12 @@ fun isPalindrome(n: Int): Boolean = n == revert(n)
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var num = n
-    val n1 = num % 10
-    if (num < 10) return false
-    num /= 10
+    var remainNum = n
+    val figure = remainNum % 10
     do {
-        if (n1 != num % 10) return true
-        num /= 10
-    } while (num > 9)
+        if (figure != remainNum % 10) return true
+        remainNum /= 10
+    } while (remainNum > 0)
     return false
 }
 
@@ -250,22 +247,20 @@ fun hasDifferentDigits(n: Int): Boolean {
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-    fun squareSequenceDigit(n: Int): Int {
+fun squareSequenceDigit(n: Int): Int {
     var remainLength = n
-    var theNum = 1
-    var i = 1.0
+    var i = 0.0
     while (remainLength > 0) {
+        i++
         val sqrI = sqr(i)
         val figureAMT = digitNumber(sqrI.toInt())
-        i++
         remainLength -= figureAMT
-        if (remainLength <= 0){
-            theNum = sqrI.toInt()
-        for (j in remainLength..0)
-        if (j == 0) theNum %= 10 else theNum /= 10
-        }
     }
-return theNum
+    var theNum = sqr(i).toInt()
+    for (j in remainLength..0)
+        if (j == 0) theNum %= 10
+        else theNum /= 10
+    return theNum
 }
 
 /**
@@ -277,17 +272,16 @@ return theNum
  */
 fun fibSequenceDigit(n: Int): Int {
     var remainLength = n
-    var theNum = 1
-    var i = 1
+    var i = 0
     while (remainLength > 0) {
+        i++
         val fibI = fib(i)
         val figureAMT = digitNumber(fibI)
-        i++
         remainLength -= figureAMT
-        if (remainLength <= 0) {
-            theNum = fibI
-            for (j in remainLength..0) if (j == 0) theNum %= 10 else theNum /= 10
-        }
     }
+    var theNum = fib(i)
+    for (j in remainLength..0)
+        if (j == 0) theNum %= 10
+        else theNum /= 10
     return theNum
 }

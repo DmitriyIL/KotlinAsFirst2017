@@ -12,6 +12,9 @@ import java.lang.Math.*
 fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
         sqr(x - x0) + sqr(y - y0) <= sqr(r)
 
+
+fun figure(n : Int, number: Int) : Int = number / pow(10.0, n - 1.0).toInt() % 10
+
 /**
  * Простая
  *
@@ -19,7 +22,7 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean =
-        (number % 10 + number / 10 % 10) == (number / 100 % 10 + number / 1000 % 10)
+        figure(1, number) + figure(2, number) == figure(3, number) + figure(4, number)
 
 /**
  * Простая
@@ -29,7 +32,7 @@ fun isNumberHappy(number: Int): Boolean =
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
-        (x1 == x2) || (y1 == y2) || (abs(x1 - x2)) == (abs(y1 - y2))
+        x1 == x2 || y1 == y2 || abs(x1 - x2) == abs(y1 - y2)
 
 /**
  * Средняя
@@ -52,14 +55,8 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    if (a <= r) {
-        if ((b <= s) || (c <= s)) return true
-    }
-    if (b <= r) {
-        if ((a <= s) || (c <= s)) return true
-    }
-    if (c <= r) {
-        if ((a <= s) || (b <= s)) return true
-}
+    if (a <= r && (b <= s || c <= s)) return true
+    if (b <= r && (a <= s || c <= s)) return true
+    if (c <= r && (a <= s || b <= s)) return true
     return false
 }
