@@ -255,9 +255,7 @@ fun squareSequenceDigit(n: Int): Int {
     var i = 0.0
     while (remainLength > 0) {
         i++
-        val sqrI = sqr(i)
-        val figureAMT = digitNumber(sqrI.toInt())
-        remainLength -= figureAMT
+        remainLength -= digitNumber(sqr(i).toInt())
     }
     return figure(abs(remainLength - 1), sqr(i).toInt())
 }
@@ -274,9 +272,7 @@ fun fibSequenceDigit(n: Int): Int {
     var i = 0
     while (remainLength > 0) {
         i++
-        val fibI = fib(i)
-        val figureAMT = digitNumber(fibI)
-        remainLength -= figureAMT
+        remainLength -= digitNumber(fib(i))
     }
     return figure(abs(remainLength - 1), fib(i))
 }
