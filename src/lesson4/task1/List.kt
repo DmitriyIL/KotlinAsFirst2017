@@ -2,6 +2,8 @@
 package lesson4.task1
 
 import lesson1.task1.*
+import lesson3.task1.maxDivisor
+import lesson2.task2.figure
 import java.lang.Math.*
 
 /**
@@ -115,7 +117,8 @@ fun abs(v: List<Double>): Double = sqrt(v.map { it * it }.sum())
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double {
-    if (list.isEmpty())  return 0.0
+    if (list.isEmpty())
+        return 0.0
     return list.sum() / list.size
 }
 
@@ -160,8 +163,10 @@ return c.sum()
  */
 fun polynom(p: List<Double>, x: Double): Double {
     val mutP = p.toMutableList()
-    for (i in 0 until mutP.size) {
-        mutP[i] *= pow(x, i.toDouble())
+    var degree = x
+    for (i in 1 until mutP.size) {
+        mutP[i] *= degree
+        degree *= x
     }
     return mutP.sum()
 }
@@ -177,15 +182,10 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    if (list.isNotEmpty()) {
-        val listFill = mutableListOf(list[0])
-        for (i in 1 until list.size) {
-            val listFillSum = listFill.sum()
-            listFill.add(list[i])
-            list[i] += listFillSum
-        }
-    }
-        return list
+    if (list.isNotEmpty())
+        for (i in 1 until list.size)
+            list[i] += list[i-1]
+    return list
 }
 
 
@@ -200,16 +200,13 @@ fun factorize(n: Int): List<Int> {
     val multipliers = mutableListOf<Int>()
     var remainN = n
     while (remainN > 1) {
-        for (i in 2..remainN){
-            if (remainN % i == 0) {
-                remainN /= i
-                multipliers.add(i)
-                break
-         }
-     }
+        multipliers.add(maxDivisor(remainN), 0)
+        remainN /= multipliers[0]
     }
-return multipliers
+    return multipliers
 }
+
+
 
 /**
  * Сложная
@@ -217,20 +214,8 @@ return multipliers
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String {
-    val multipliers = mutableListOf<Int>()
-    var remainN = n
-    while (remainN > 1) {
-        for (i in 2..remainN) {
-            if (remainN % i == 0) {
-                remainN /= i
-                multipliers.add(i)
-                break
-            }
-        }
-    }
-    return multipliers.joinToString (separator = "*" )
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString (separator = "*" )
+
 /**
  * Средняя
  *
@@ -243,13 +228,15 @@ fun convert(n: Int, base: Int): List<Int> {
     val newSys = mutableListOf<Int>()
     var remainN = n
     while (remainN > 0) {
-        val mod = remainN % base
+        newSys.add(0, remainN % base)
         remainN /= base
-        newSys.add(0, mod)
     }
 return newSys
 }
 
+val figure = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c",
+        "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+        "t", "u", "v", "w", "x", "y", "z")
 /**
  * Сложная
  *
@@ -258,20 +245,7 @@ return newSys
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String {
-    val figure = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
-    if (n == 0) return "0"
-    val newSys = mutableListOf<String>()
-    var remainN = n
-    while (remainN > 0) {
-        val mod = remainN % base
-        remainN /= base
-        newSys.add(0, figure[mod])
-    }
-    return newSys.joinToString(separator = "")
-}
-
-
+fun convertToString(n: Int, base: Int): String = convert(n, base).joinToString(separator = "") { figure[it] }
 
 
 
@@ -282,12 +256,15 @@ fun convertToString(n: Int, base: Int): String {
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
+
 fun decimal(digits: List<Int>, base: Int): Int {
     var num = 0.0
+    var degree = pow(base.toDouble(), digits.size - 1.0)
     for (i in 0 until digits.size) {
-        num += digits[i] * pow(base.toDouble(), digits.size - i.toDouble() - 1)
+        num += digits[i] * pow(base.toDouble(), degree)
+        degree /= base
     }
-return num.toInt()
+    return num.toInt()
 }
 
 /**
@@ -300,20 +277,14 @@ return num.toInt()
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-val figure = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c",
-        "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
-        "t", "u", "v", "w", "x", "y", "z")
-    val digits = mutableListOf<Int>()
-    for (c in str) {
-        digits.add(figure.indexOf(c.toString()))
-    }
     var num = 0.0
-    for (i in 0 until digits.size) {
-        num += digits[i] * pow(base.toDouble(), digits.size - i.toDouble() - 1)
+    var degree = pow(base.toDouble(), str.length - 1.0)
+    for (i in 0 until str.length) {
+        num += figure.indexOf(str[i].toString()) * degree
+        degree /= base
     }
     return num.toInt()
 }
-
 
 
 
@@ -329,14 +300,10 @@ fun roman(n: Int): String {
     val firstNum = arrayOf("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX")
     val secondNum = arrayOf("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
     val thirdNum = arrayOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
-    var fourthNum = ""
-    for (i in 1..n/1000) {
-        fourthNum += "M"
-    }
-    var nStr = (n % 1000).toString()
-    while (nStr.length < 4) { nStr = "0" + nStr }
-
-    return fourthNum + thirdNum[nStr[1].toInt()-48] + secondNum[nStr[2].toInt()-48] + firstNum[nStr[3].toInt()-48]
+    var num = ""
+    for (i in 1..n/1000)
+        num += "M"
+    return num + thirdNum[figure(3, n)] + secondNum[figure(2, n)] + firstNum[figure(1, n)]
 }
 /**
  * Очень сложная
@@ -346,42 +313,46 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    val firstArr = arrayOf("j", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val firstArr = arrayOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val secondArr = arrayOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
-    val thirdArr = arrayOf("j", "j", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
-    val fourthArr = arrayOf("j", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    val thirdArr = arrayOf("двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+    val fourthArr = arrayOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
     val fifthArr = arrayOf("две", "три", "четыре")
     val num = mutableListOf<String>()
-    if ((n % 100 <= 19) && (n % 100 >= 10)) {
-        num.add(secondArr[n % 100 - 10])
+    if (n % 100 in (10..19)) {
+        num.add(secondArr[n % 10])
     } else {
-        num.add(firstArr[n % 10])
-        num.add(0, thirdArr[n / 10 % 10])
+        num.add(firstArr[n % 10 - 1])
+        num.add(0, thirdArr[figure(2, n) - 2])
     }
-    num.add(0, fourthArr[n / 100 % 10])
+    num.add(0, fourthArr[figure(3, n) - 1])
     val half = n / 1000
     if (half > 0) {
-        if (half % 100 == 0) num.add(0, "тысяч")
-        else if ((half % 100 <= 19) && (half % 100 >= 10)) {
-            num.add(0, secondArr[half % 100 - 10])
-            num.add(1, "тысяч")
+        when {
+            half % 100 == 0 -> num.add(0, "тысяч")
+            half % 100 in (10..19) -> {
+                num.add(0, secondArr[half % 10])
+                num.add(1, "тысяч")
+            }
+            else -> {
+                when {
+                    half % 10 == 1 -> {
+                        num.add(0, "тысяча")
+                        num.add(0, "одна")
+                    }
+                    half % 10 in (2..4) -> {
+                        num.add(0, "тысячи")
+                        num.add(0, fifthArr[half % 10 - 2])
+                    }
+                    else -> {
+                        num.add(0, "тысяч")
+                        num.add(0, firstArr[half % 10 - 1])
+                    }
+                }
+                num.add(0, thirdArr[figure(2, half) - 2])
+            }
         }
-        else {
-            if (half % 10 == 1) {
-                num.add(0, "тысяча")
-                num.add(0, "одна")
-            }
-            else if ((half % 10 >= 2) && (half % 10 <= 4)) {
-                num.add(0, "тысячи")
-                num.add(0, fifthArr[half % 10 - 2])
-            }
-            else {
-                num.add(0, "тысяч")
-                num.add(0, firstArr[half % 10])
-            }
-            num.add(0, thirdArr[half / 10 % 10])
-        }
-        num.add(0, fourthArr[half / 100 % 10])
+        num.add(0, fourthArr[figure(3, half) - 1])
     }
-    return num.filter { it != "j" }.joinToString( separator = " ")
+    return num.joinToString()
 }
