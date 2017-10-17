@@ -3,6 +3,7 @@ package lesson3.task1
 
 import jdk.nashorn.internal.ir.WhileNode
 import lesson1.task1.sqr
+import lesson2.task2.figure
 import java.lang.Math.*
 
 /**
@@ -89,16 +90,18 @@ for (i in 2..n) {
 }
 return n2
 }
- fun nod(m: Int, n: Int) : Int {
-     var max = max(m, n)
-     var min = min(m, n)
-     while (min > 0){
-         val c = min
-         min = max % min
-         max = c
-     }
-     return max
- }
+
+
+fun nod(m: Int, n: Int) : Int {
+    var max = max(m, n)
+    var min = min(m, n)
+    while (min > 0){
+        val c = min
+        min = max % min
+        max = c
+    }
+    return max
+}
 /**
  * Простая
  *
@@ -256,11 +259,7 @@ fun squareSequenceDigit(n: Int): Int {
         val figureAMT = digitNumber(sqrI.toInt())
         remainLength -= figureAMT
     }
-    var theNum = sqr(i).toInt()
-    for (j in remainLength..0)
-        if (j == 0) theNum %= 10
-        else theNum /= 10
-    return theNum
+    return figure(abs(remainLength - 1), sqr(i).toInt())
 }
 
 /**
@@ -279,9 +278,5 @@ fun fibSequenceDigit(n: Int): Int {
         val figureAMT = digitNumber(fibI)
         remainLength -= figureAMT
     }
-    var theNum = fib(i)
-    for (j in remainLength..0)
-        if (j == 0) theNum %= 10
-        else theNum /= 10
-    return theNum
+    return figure(abs(remainLength - 1), fib(i))
 }
