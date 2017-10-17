@@ -313,19 +313,19 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    val firstArr = arrayOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val firstArr = arrayOf("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val secondArr = arrayOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
-    val thirdArr = arrayOf("двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
-    val fourthArr = arrayOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    val thirdArr = arrayOf("", "", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+    val fourthArr = arrayOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
     val fifthArr = arrayOf("две", "три", "четыре")
     val num = mutableListOf<String>()
     if (n % 100 in (10..19)) {
         num.add(secondArr[n % 10])
     } else {
-        num.add(firstArr[n % 10 - 1])
-        num.add(0, thirdArr[figure(2, n) - 2])
+        num.add(firstArr[n % 10])
+        num.add(0, thirdArr[figure(2, n)])
     }
-    num.add(0, fourthArr[figure(3, n) - 1])
+    num.add(0, fourthArr[figure(3, n)])
     val half = n / 1000
     if (half > 0) {
         when {
@@ -346,13 +346,13 @@ fun russian(n: Int): String {
                     }
                     else -> {
                         num.add(0, "тысяч")
-                        num.add(0, firstArr[half % 10 - 1])
+                        num.add(0, firstArr[half % 10])
                     }
                 }
-                num.add(0, thirdArr[figure(2, half) - 2])
+                num.add(0, thirdArr[figure(2, half)])
             }
         }
-        num.add(0, fourthArr[figure(3, half) - 1])
+        num.add(0, fourthArr[figure(3, half)])
     }
-    return num.joinToString()
+    return num.filter{ it != "" }.joinToString(separator = " ")
 }
