@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson6.task1
 
+import lesson1.task1.angleInRadian
 import lesson1.task1.sqr
 import java.lang.Math.*
 
@@ -188,7 +189,7 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
  * Построить прямую по двум точкам
  */
 fun lineByPoints(a: Point, b: Point): Line {
-    val arctg = atan(abs(a.y - b.y) / abs(a.x - b.x))
+    val arctg = atan((a.y - b.y) / (a.x - b.x))
     val angle = if (arctg < 0.0) PI + arctg else arctg
     return Line(a, angle)
 }
@@ -199,8 +200,13 @@ fun lineByPoints(a: Point, b: Point): Line {
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line =
-        lineByPoints(a, Point(-b.y, b.x))
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val line = lineByPoints(a, b)
+    val angle = if (line.angle < PI / 2) line.angle + PI / 2
+                else line.angle - PI / 2
+    return Line(Segment(a, b).center(), angle)
+}
+
 
 /**
  * Средняя
