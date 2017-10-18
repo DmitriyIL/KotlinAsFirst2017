@@ -158,7 +158,7 @@ class Line private constructor(val b: Double, val angle: Double) {
         val y = when {
             angle == 0.0 -> b
             other.angle == 0.0 -> other.b
-            else -> (x * sin(angle) + b) / cos(angle)
+            else -> (x * sin(other.angle) + other.b) / cos(other.angle)
         }
         return Point (x, y)
 
@@ -202,8 +202,11 @@ fun lineByPoints(a: Point, b: Point): Line {
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
     val line = lineByPoints(a, b)
-    val angle = if (line.angle < PI / 2) line.angle + PI / 2
-                else line.angle - PI / 2
+    val angle = when {
+        line.angle < PI / 2 -> line.angle + PI / 2
+        line.angle == PI / 2 -> 0.0
+        else -> line.angle - PI / 2
+    }
     return Line(Segment(a, b).center(), angle)
 }
 
