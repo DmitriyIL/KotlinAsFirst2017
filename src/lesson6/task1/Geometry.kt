@@ -13,6 +13,7 @@ data class Point(val x: Double, val y: Double) {
      *
      * Рассчитать (по известной формуле) расстояние между двумя точками
      */
+
     fun distance(other: Point): Double = Math.sqrt(sqr(x - other.x) + sqr(y - other.y))
 }
 /**
@@ -173,16 +174,13 @@ class Line private constructor(val b: Double, val angle: Double) {
     override fun toString() = "Line(${Math.cos(angle)} * y = ${Math.sin(angle)} * x + $b)"
 }
 
+
 /**
  * Средняя
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line {
-    val arctg = atan((s.begin.y - s.end.y) / (s.begin.x - s.end.x))
-    val angle = if (arctg < 0.0) PI + arctg else arctg
-    return Line(s.begin, angle)
-}
+fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
 
 /**
  * Средняя
@@ -190,7 +188,7 @@ fun lineBySegment(s: Segment): Line {
  * Построить прямую по двум точкам
  */
 fun lineByPoints(a: Point, b: Point): Line {
-    val arctg = atan((a.y - b.y) / (a.x - b.x))
+    val arctg = atan(abs(a.y - b.y) / abs(a.x - b.x))
     val angle = if (arctg < 0.0) PI + arctg else arctg
     return Line(a, angle)
 }
@@ -201,11 +199,8 @@ fun lineByPoints(a: Point, b: Point): Line {
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line {
-    val arctg = atan((a.y - b.y) / (a.x - b.x)) - PI / 2
-    val angle = if (arctg < 0.0) PI + arctg else arctg
-    return Line(Segment(a, b).center(), angle)
-}
+fun bisectorByPoints(a: Point, b: Point): Line =
+        lineByPoints(a, Point(-b.y, b.x))
 
 /**
  * Средняя

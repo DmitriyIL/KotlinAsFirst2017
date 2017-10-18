@@ -4,6 +4,7 @@ package lesson4.task1
 import lesson1.task1.*
 import lesson3.task1.maxDivisor
 import lesson2.task2.figure
+import lesson3.task1.minDivisor
 import java.lang.Math.*
 
 /**
@@ -200,8 +201,8 @@ fun factorize(n: Int): List<Int> {
     val multipliers = mutableListOf<Int>()
     var remainN = n
     while (remainN > 1) {
-        multipliers.add(maxDivisor(remainN), 0)
-        remainN /= multipliers[0]
+        multipliers.add(minDivisor(remainN))
+        remainN /= multipliers.last()
     }
     return multipliers
 }
@@ -261,7 +262,7 @@ fun decimal(digits: List<Int>, base: Int): Int {
     var num = 0.0
     var degree = pow(base.toDouble(), digits.size - 1.0)
     for (i in 0 until digits.size) {
-        num += digits[i] * pow(base.toDouble(), degree)
+        num += digits[i] * degree
         degree /= base
     }
     return num.toInt()
