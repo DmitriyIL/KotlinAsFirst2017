@@ -355,5 +355,5 @@ fun russian(n: Int): String {
         }
         num.add(0, fourthArr[figure(3, half)])
     }
-    return num.filter{ it != "" }.joinToString(separator = " ")
+    return num.filter{ it != "" }.joinToString(" ")
 }
