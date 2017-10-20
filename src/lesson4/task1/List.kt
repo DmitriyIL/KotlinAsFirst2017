@@ -7,6 +7,7 @@ import lesson2.task2.figure
 import lesson3.task1.minDivisor
 import java.lang.Math.*
 import java.math.BigInteger
+import kotlin.text.Typography.half
 
 /**
  * Пример
@@ -313,14 +314,60 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
+
+val firstArr = arrayOf("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+val secondArr = arrayOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+val thirdArr = arrayOf("", "", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+val fourthArr = arrayOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+
 fun russian(n: Int): String {
-    val firstArr = arrayOf("", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
-    val secondArr = arrayOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
-    val thirdArr = arrayOf("", "", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
-    val fourthArr = arrayOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
-    val fifthArr = arrayOf("две", "три", "четыре")
+    val num = thousand2(n / 1000) + thousand1(n % 1000)
+    return num.filter{ it != "" }.joinToString(" ")
+}
+
+fun thousand1 (n: Int) : MutableList<String> {
     val num = mutableListOf<String>()
+    if (n < 1) return mutableListOf()
     if (n % 100 in (10..19)) {
+        num.add(secondArr[n % 10])
+    } else {
+        num.add(firstArr[n % 10])
+        num.add(0, thirdArr[figure(2, n)])
+    }
+    num.add(0, fourthArr[figure(3, n)])
+    return num
+}
+
+fun thousand2 (n: Int) : MutableList<String> { //где n это первые три порядка
+    if (n < 1) return mutableListOf()
+    val num = thousand1(n)
+    when (num.last()) {
+        "один" -> num[num.size - 1] = "одна тысяча"
+        "два" -> num[num.size - 1] = "две тысячи"
+        "три" -> num.add("тысячи")
+        "четыре" -> num.add("тысячи")
+        else -> num.add("тысяч")
+    }
+    return num
+}
+    /*when {
+            n % 100 == 0 -> num.add(0, "тысяч")
+            n % 100 in (10..19) -> num.add(0, secondArr[n % 10] + "тысяч")
+            else -> {
+                when {
+                    n % 10 == 1 -> num.add(0, "одна тысяча")
+                    n % 10 in (2..4) -> num.add(0, fifthArr[n % 10 - 2] + "тысячи")
+                    else -> num.add(0, firstArr[n % 10] + "тысяч")
+                }
+                num.add(0, thirdArr[figure(2, n)])
+            }
+        }
+        num.add(0, fourthArr[figure(3, n)])
+
+    */
+
+
+/*if (n % 100 in (10..19)) {
         num.add(secondArr[n % 10])
     } else {
         num.add(firstArr[n % 10])
@@ -331,29 +378,15 @@ fun russian(n: Int): String {
     if (half > 0) {
         when {
             half % 100 == 0 -> num.add(0, "тысяч")
-            half % 100 in (10..19) -> {
-                num.add(0, secondArr[half % 10])
-                num.add(1, "тысяч")
-            }
+            half % 100 in (10..19) -> num.add(0, secondArr[half % 10] + "тысяч")
             else -> {
                 when {
-                    half % 10 == 1 -> {
-                        num.add(0, "тысяча")
-                        num.add(0, "одна")
-                    }
-                    half % 10 in (2..4) -> {
-                        num.add(0, "тысячи")
-                        num.add(0, fifthArr[half % 10 - 2])
-                    }
-                    else -> {
-                        num.add(0, "тысяч")
-                        num.add(0, firstArr[half % 10])
-                    }
+                    half % 10 == 1 -> num.add(0, "одна тысяча")
+                    half % 10 in (2..4) -> num.add(0, fifthArr[half % 10 - 2] + "тысячи")
+                    else -> num.add(0, firstArr[half % 10] + "тысяч")
                 }
                 num.add(0, thirdArr[figure(2, half)])
             }
         }
         num.add(0, fourthArr[figure(3, half)])
-    }
-    return num.filter{ it != "" }.joinToString(" ")
-}
+    }*/
