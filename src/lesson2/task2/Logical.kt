@@ -13,8 +13,9 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
         sqr(x - x0) + sqr(y - y0) <= sqr(r)
 
 
-fun figure(n : Int, number: Int) : Int = number / pow(10.0, n - 1.0).toInt() % 10
+fun figure(n: Int, number: Int) : Int = number / pow(10.0, n - 1.0).toInt() % 10
 
+fun sum (num: Int, n1: Int, n2: Int) : Int = figure(n1, num) + figure(n2, num)
 /**
  * Простая
  *
@@ -22,7 +23,7 @@ fun figure(n : Int, number: Int) : Int = number / pow(10.0, n - 1.0).toInt() % 1
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean =
-        figure(1, number) + figure(2, number) == figure(3, number) + figure(4, number)
+         sum(number, 1, 2) == sum(number, 3, 4)
 
 /**
  * Простая

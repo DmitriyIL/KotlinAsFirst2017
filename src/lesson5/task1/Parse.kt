@@ -1,8 +1,6 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson5.task1
 
-import java.awt.datatransfer.StringSelection
-
 /**
  * Пример
  *
@@ -44,6 +42,7 @@ fun timeSecondsToStr(seconds: Int): String {
  * Пример: консольный ввод
  */
 fun main(args: Array<String>) {
+    dateStrToDigit("15 июля")
     println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
     if (line != null) {
@@ -68,20 +67,18 @@ fun main(args: Array<String>) {
  * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
  * При неверном формате входной строки вернуть пустую строку
  */
+val months = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
+val days = arrayOf(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+
 fun dateStrToDigit(str: String): String {
-    val months = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
     val parts = str.split(" ")
-    var month = -1
-    try {
-            val day = parts[0].toInt()
-            val year = parts[2].toInt()
-            for (i in 0 until 12)
-                if (months[i] == parts[1]){
-                    month = i+1
-                }
-        if ((parts.size > 3) || (month == -1)) return ""
-        return String.format("%02d.%02d.%d", day, month ,year)
-    } catch (e : Exception) {return ""}
+    if (parts.size != 3) return ""
+    val month = months.indexOf(parts[1]) + 1
+    val day = parts[0].toInt()
+    val year = parts[2].toInt()
+    if (month == 0 || parts[0].toInt() !in (1..days[month]) || year <= 0)
+        return ""
+    return String.format("%02d.%02d.%d", day, month, year)
 }
 
 /**
@@ -92,17 +89,16 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    val months = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
     val parts = digital.split(".")
     try {
-            val day = parts[0].toInt()
-            val year = parts[2].toInt()
-            val month = months[parts[1].toInt() - 1]
-        if (parts.size > 3) return ""
+        val day = parts[0].toInt()
+        val year = parts[2].toInt()
+        val month = months[parts[1].toInt() - 1]
+        if (parts.size != 3 || day !in (1..days[months.indexOf(month)]) || year <= 0)
+            return ""
         return String.format("%d %s %d", day, month, year)
-    } catch (e: Exception) { return  ""}
+    } catch (e: IndexOutOfBoundsException) { return  ""}
 }
-
 /**
  * Средняя
  *
@@ -142,22 +138,10 @@ return number
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int {
-    val parts = jumps.split(" ")
-    val results = mutableListOf<Int>()
-    try {
-        for (part in parts) {
-            if ((part != "-") && (part != "%") && (part != "")) {
-                results.add(part.toInt())
-            }
-        }
-    } catch (e : Exception) { return -1 }
-    var max = -1
-    for (el in results) {
-        if (el > max) max = el
-    }
-    return max
-}
+fun bestLongJump(jumps: String): Int = try {
+    val results = jumps.split(" ").filter { it != "-" && it != "%" && it != "" && it != " " }
+    results.map { it.toInt() }.max() ?: -1
+} catch (e: NumberFormatException) { -1 }
 
 /**
  * Сложная
@@ -184,9 +168,9 @@ fun bestHighJump(jumps: String): Int {
     }
     catch (e : Exception) { return -1 }
     var max = -1
-    for (el in results) {
-        if (el > max) max = el
-    }
+    for (el in results)
+        if (el > max)
+            max = el
     return max
 }
 /**

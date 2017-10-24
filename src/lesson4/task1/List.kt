@@ -217,7 +217,7 @@ fun factorize(n: Int): List<Int> {
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String = factorize(n).joinToString (separator = "*" )
+fun factorizeToString(n: Int): String = factorize(n).joinToString ("*")
 
 /**
  * Средняя
@@ -321,26 +321,26 @@ val thirdArr = arrayOf("", "", "двадцать", "тридцать", "соро
 val fourthArr = arrayOf("", "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
 
 fun russian(n: Int): String {
-    val num = thousand2(n / 1000) + thousand1(n % 1000)
+    val num = thousands(n / 1000) + hundreds(n % 1000)
     return num.filter{ it != "" }.joinToString(" ")
 }
 
-fun thousand1 (n: Int) : MutableList<String> {
+fun hundreds (n: Int) : MutableList<String> {
     val num = mutableListOf<String>()
     if (n < 1) return mutableListOf()
-    if (n % 100 in (10..19)) {
-        num.add(secondArr[n % 10])
-    } else {
-        num.add(firstArr[n % 10])
+    if (n % 100 in (10..19))
+        num.add(secondArr[figure(1, n)])
+    else {
+        num.add(firstArr[figure(1, n)])
         num.add(0, thirdArr[figure(2, n)])
     }
     num.add(0, fourthArr[figure(3, n)])
     return num
 }
 
-fun thousand2 (n: Int) : MutableList<String> { //где n это первые три порядка
+fun thousands (n: Int) : MutableList<String> {
     if (n < 1) return mutableListOf()
-    val num = thousand1(n)
+    val num = hundreds(n)
     when (num.last()) {
         "один" -> num[num.size - 1] = "одна тысяча"
         "два" -> num[num.size - 1] = "две тысячи"
@@ -350,43 +350,3 @@ fun thousand2 (n: Int) : MutableList<String> { //где n это первые т
     }
     return num
 }
-    /*when {
-            n % 100 == 0 -> num.add(0, "тысяч")
-            n % 100 in (10..19) -> num.add(0, secondArr[n % 10] + "тысяч")
-            else -> {
-                when {
-                    n % 10 == 1 -> num.add(0, "одна тысяча")
-                    n % 10 in (2..4) -> num.add(0, fifthArr[n % 10 - 2] + "тысячи")
-                    else -> num.add(0, firstArr[n % 10] + "тысяч")
-                }
-                num.add(0, thirdArr[figure(2, n)])
-            }
-        }
-        num.add(0, fourthArr[figure(3, n)])
-
-    */
-
-
-/*if (n % 100 in (10..19)) {
-        num.add(secondArr[n % 10])
-    } else {
-        num.add(firstArr[n % 10])
-        num.add(0, thirdArr[figure(2, n)])
-    }
-    num.add(0, fourthArr[figure(3, n)])
-    val half = n / 1000
-    if (half > 0) {
-        when {
-            half % 100 == 0 -> num.add(0, "тысяч")
-            half % 100 in (10..19) -> num.add(0, secondArr[half % 10] + "тысяч")
-            else -> {
-                when {
-                    half % 10 == 1 -> num.add(0, "одна тысяча")
-                    half % 10 in (2..4) -> num.add(0, fifthArr[half % 10 - 2] + "тысячи")
-                    else -> num.add(0, firstArr[half % 10] + "тысяч")
-                }
-                num.add(0, thirdArr[figure(2, half)])
-            }
-        }
-        num.add(0, fourthArr[figure(3, half)])
-    }*/

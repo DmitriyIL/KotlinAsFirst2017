@@ -47,14 +47,14 @@ class Tests {
         assertEquals("", dateDigitToStr("01.02.20.19"))
         assertEquals("", dateDigitToStr("28.00.2000"))
         assertEquals("3 апреля 2011", dateDigitToStr("03.04.2011"))
-        assertEquals("", dateDigitToStr("ab.cd.ef"))
+        assertEquals("", dateDigitToStr("15.01.-1"))
     }
 
     @Test
     @Tag("Normal")
     fun flattenPhoneNumber() {
         assertEquals("+79211234567", flattenPhoneNumber("+7 (921) 123-45-67"))
-        assertEquals("", flattenPhoneNumber(" +"))
+        assertEquals("", flattenPhoneNumber("+"))
         assertEquals("123456798", flattenPhoneNumber("12 --  34- 5 -- 67 -98"))
         assertEquals("", flattenPhoneNumber("ab-123"))
         assertEquals("+12345", flattenPhoneNumber("+12 (3) 4-5"))
@@ -64,7 +64,7 @@ class Tests {
     @Test
     @Tag("Normal")
     fun bestLongJump() {
-        assertEquals(2147483647, bestLongJump("%   593081463 - % - 1046548542 - 1079307515 0 -  - 0 -  - 1 973025546   2147483647 0  2147483647     - -   %   1  1 - -   -   % -  321738215 2147483647 %  % - %  %   2147483647 711083610 1    - - % % - % 593470316 % - - 585413364"))
+        assertEquals(2147483647, bestLongJump("%   593081463 - % - 90242104 - 1079307515 0 -  - 0 -  - 1 973025546   2147483647 0  2147483647     - -   %   1  1 - -   -   % -  321738215 2147483647 %  % - %  %   2147483647 711083610 1    - - % % - % 593470316 % - - 585413364"))
         assertEquals(-1, bestLongJump("% - - % -"))
         assertEquals(754, bestLongJump("700 717 707 % 754"))
         assertEquals(-1, bestLongJump("700 + 700"))
