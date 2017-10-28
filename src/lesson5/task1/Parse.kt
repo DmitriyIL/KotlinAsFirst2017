@@ -75,7 +75,7 @@ fun dateStrToDigit(str: String): String {
         val day = parts[0].toInt()
         val month = months.indexOf(parts[1]) + 1
         val year = parts[2].toInt()
-        if (month == 0 || day <= 0 || year <= 0) return ""
+        if (month == 0 || day <= 0 || year < 0) return ""
         return String.format("%02d.%02d.%d", day, month, year)
     } catch (e : Exception) { return ""}
 }
@@ -93,7 +93,7 @@ fun dateDigitToStr(digital: String): String {
         val day = parts[0].toInt()
         val month = months[parts[1].toInt() - 1]
         val year = parts[2].toInt()
-        if (year <= 0 || day <= 0) return ""
+        if (year < 0 || day <= 0) return ""
         return String.format("%d %s %d", day, month, year)
     } catch (e: Exception) { return "" }
 }
@@ -110,30 +110,13 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    var newPhone = phone.filter { it != '-' && it != ' ' && it != '(' && it != ')' }
+    val newPhone = phone.filter { it != '-' && it != ' ' && it != '(' && it != ')' }
     for (char in newPhone)
         if (char !in '0'..'9' && char != '+' || char == '+' && newPhone.length < 2)
             return ""
     return newPhone
 }
 
-
-/*{
-    var number = ""
-    var parts = phone.split("").filter { it != "" && it != " " }.toMutableList()
-    try {
-        if (parts[0] == "+" && parts.size > 1) {
-            number = "+"
-            parts.removeAt(0)
-        }
-    } catch (e : IndexOutOfBoundsException) { return "" }
-    parts = parts.filter{ it !=  "-" && it != "+" && it != "(" && it != ")" }.toMutableList()
-    for (i in 0 until parts.size) {
-        if (parts[i] in ("0".."9")) number += parts[i]
-        else return ""
-    }
-return number
-}*/
 
 /**
  * Средняя

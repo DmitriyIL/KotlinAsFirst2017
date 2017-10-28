@@ -258,8 +258,15 @@ fun convertToString(n: Int, base: Int): String =
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
 
-fun decimal(digits: List<Int>, base: Int): Int =
-        decimalFromString(digits.joinToString("") { figure[it] }, base)
+fun decimal(digits: List<Int>, base: Int): Int {
+    var num = 0.0
+    var degree = pow(base.toDouble(), digits.size - 1.0)
+    for (i in 0 until digits.size) {
+        num += digits[i] * degree
+        degree /= base
+    }
+    return num.toInt()
+}
 
 /**
  * Сложная
