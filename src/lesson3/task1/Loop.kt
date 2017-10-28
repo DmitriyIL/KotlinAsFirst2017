@@ -39,7 +39,7 @@ fun isPrime(n: Int): Boolean {
  */
 fun isPerfect(n: Int): Boolean {
     var sum = 1
-    for (m in 2..n/2) {
+    for (m in 2..n / 2) {
         if (n % m > 0) continue
         sum += m
         if (sum > n) break
@@ -92,7 +92,7 @@ return n2
 }
 
 
-fun nod(m: Int, n: Int) : Int {
+fun gcd (m: Int, n: Int) : Int {
     var max = max(m, n)
     var min = min(m, n)
     while (min > 0){
@@ -108,7 +108,7 @@ fun nod(m: Int, n: Int) : Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка.
  */
-fun lcm(m: Int, n: Int): Int = (m * n) / nod(m, n)
+fun lcm(m: Int, n: Int): Int = (m * n) / gcd(m, n)
 
 /**
  * Простая
@@ -136,7 +136,7 @@ fun maxDivisor(n: Int): Int = n / minDivisor(n)
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
+fun isCoPrime(m: Int, n: Int): Boolean = gcd(m, n) == 1
 
 
 
@@ -149,7 +149,7 @@ fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     for (i in 0..sqrt(n.toDouble()).toInt())
-        if (sqr(i.toDouble()) <= n  &&  sqr(i.toDouble()) >= m) return true
+        if (sqr(i.toDouble()) <= n && sqr(i.toDouble()) >= m) return true
     return false
 }
 
@@ -161,16 +161,16 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    val arg = x % (2 * PI)
+    val argument = x % (2 * PI)
     var sin = 0.0
-    var mem = arg
+    var member = argument
     var k = 1
     var sing = 1
-    while (abs(mem) >= eps ) {
-        sin +=  sing * mem
+    while (abs(member) >= eps) {
+        sin +=  sing * member
         sing *= -1
         k += 2
-        mem *= sqr(arg) / k / (k - 1)
+        member *= sqr(argument) / k / (k - 1)
     }
     return sin
 }
@@ -183,16 +183,16 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    val arg = x % (2 * PI)
+    val argument = x % (2 * PI)
     var cos = 0.0
-    var mem = 1.0
+    var member = 1.0
     var k = 0
     var sing = 1
-    while (abs(mem) >= eps) {
-        cos += sing * mem
+    while (abs(member) >= eps) {
+        cos += sing * member
         sing *= -1
         k += 2
-        mem *= sqr(arg) / k / (k - 1)
+        member *= sqr(argument) / k / (k - 1)
     }
     return cos
 }

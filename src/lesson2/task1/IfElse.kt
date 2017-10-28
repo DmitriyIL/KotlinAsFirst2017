@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson2.task1
 
+import com.sun.org.apache.xpath.internal.operations.Equals
 import lesson1.task1.*
 import java.lang.Math.*
 
@@ -35,9 +36,9 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    age%100  in (10..20) -> "$age лет"
-    age%10 == 0 || age%10 >= 5 -> "$age лет"
-    age%10 == 1 -> "$age год"
+    age % 100  in (10..20) -> "$age лет"
+    age % 10 == 0 || age % 10 >= 5 -> "$age лет"
+    age % 10 == 1 -> "$age год"
     else -> "$age года"
 }
 
@@ -118,7 +119,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val avr = a + b + c - max - min
     val cos = (pow(min, 2.0) + pow(avr, 2.0) - pow(max, 2.0)) / (2 * avr * min)
     return if (cos > 0 && cos < 1) 0
-    else if (cos == 0.0) 1
+    else if (abs(cos) < 1e-6) 1
     else if (cos < 0 && cos > -1) 2
     else -1
 }

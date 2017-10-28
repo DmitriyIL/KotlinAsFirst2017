@@ -68,17 +68,16 @@ fun main(args: Array<String>) {
  * При неверном формате входной строки вернуть пустую строку
  */
 val months = arrayOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-val days = arrayOf(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
-    if (parts.size != 3) return ""
-    val month = months.indexOf(parts[1]) + 1
-    val day = parts[0].toInt()
-    val year = parts[2].toInt()
-    if (month == 0 || parts[0].toInt() !in (1..days[month]) || year <= 0)
-        return ""
-    return String.format("%02d.%02d.%d", day, month, year)
+    try {
+        val day = parts[0].toInt()
+        val month = months.indexOf(parts[1]) + 1
+        val year = parts[2].toInt()
+        if (month == 0 || day <= 0 || year <= 0) return ""
+        return String.format("%02d.%02d.%d", day, month, year)
+    } catch (e : Exception) { return ""}
 }
 
 /**
@@ -92,12 +91,11 @@ fun dateDigitToStr(digital: String): String {
     val parts = digital.split(".")
     try {
         val day = parts[0].toInt()
-        val year = parts[2].toInt()
         val month = months[parts[1].toInt() - 1]
-        if (parts.size != 3 || day !in (1..days[months.indexOf(month)]) || year <= 0)
-            return ""
+        val year = parts[2].toInt()
+        if (year <= 0 || day <= 0) return ""
         return String.format("%d %s %d", day, month, year)
-    } catch (e: IndexOutOfBoundsException) { return  ""}
+    } catch (e: Exception) { return "" }
 }
 /**
  * Средняя
@@ -112,6 +110,15 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
+    var newPhone = phone.filter { it != '-' && it != ' ' && it != '(' && it != ')' }
+    for (char in newPhone)
+        if (char !in '0'..'9' && char != '+' || char == '+' && newPhone.length < 2)
+            return ""
+    return newPhone
+}
+
+
+/*{
     var number = ""
     var parts = phone.split("").filter { it != "" && it != " " }.toMutableList()
     try {
@@ -126,7 +133,7 @@ fun flattenPhoneNumber(phone: String): String {
         else return ""
     }
 return number
-}
+}*/
 
 /**
  * Средняя
@@ -166,7 +173,7 @@ fun bestHighJump(jumps: String): Int {
                 }
                 }
     }
-    catch (e : Exception) { return -1 }
+    catch (e : IndexOutOfBoundsException) { return -1 }
     var max = -1
     for (el in results)
         if (el > max)

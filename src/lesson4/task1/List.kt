@@ -147,11 +147,10 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.0.
  */
 fun times(a: List<Double>, b: List<Double>): Double {
-    val c = mutableListOf<Double>()
-    for (i in 0 until a.size) {
-        c.add(a[i] * b[i])
-}
-return c.sum()
+    var c = 0.0
+    for (i in 0 until a.size)
+        c += a[i] * b[i]
+return c
 }
 
 
@@ -185,9 +184,8 @@ fun polynom(p: List<Double>, x: Double): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
-    if (list.isNotEmpty())
-        for (i in 1 until list.size)
-            list[i] += list[i-1]
+    for (i in 1 until list.size)
+        list[i] += list[i-1]
     return list
 }
 
@@ -217,7 +215,7 @@ fun factorize(n: Int): List<Int> {
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String = factorize(n).joinToString ("*")
+fun factorizeToString(n: Int): String = factorize(n).joinToString("*")
 
 /**
  * Средняя
@@ -248,7 +246,8 @@ val figure = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b",
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = BigInteger("$n").toString(base)
+fun convertToString(n: Int, base: Int): String =
+        convert(n, base).joinToString("") { figure[it] }
 
 
 /**
@@ -259,15 +258,8 @@ fun convertToString(n: Int, base: Int): String = BigInteger("$n").toString(base)
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
 
-fun decimal(digits: List<Int>, base: Int): Int {
-    var num = 0.0
-    var degree = pow(base.toDouble(), digits.size - 1.0)
-    for (i in 0 until digits.size) {
-        num += digits[i] * degree
-        degree /= base
-    }
-    return num.toInt()
-}
+fun decimal(digits: List<Int>, base: Int): Int =
+        decimalFromString(digits.joinToString("") { figure[it] }, base)
 
 /**
  * Сложная
@@ -305,7 +297,7 @@ fun roman(n: Int): String {
     var num = ""
     for (i in 1..n/1000)
         num += "M"
-    return num + thirdNum[figure(3, n)] + secondNum[figure(2, n)] + firstNum[figure(1, n)]
+    return num + thirdNum[n / 100 % 10] + secondNum[n / 10 % 10] + firstNum[n % 10]
 }
 /**
  * Очень сложная
