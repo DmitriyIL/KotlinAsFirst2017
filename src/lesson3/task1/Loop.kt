@@ -169,7 +169,7 @@ fun sin(x: Double, eps: Double): Double {
         sin +=  sing * member
         sing *= -1
         k += 2
-        member *= sqr(argument) / k / (k - 1)
+        member *= sqr(argument) / (k * (k - 1))
     }
     return sin
 }
@@ -245,13 +245,13 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var remainLength = n
+    var num = n
     var i = 0.0
-    while (remainLength > 0) {
+    while (num > 0) {
         i++
-        remainLength -= digitNumber(sqr(i).toInt())
+        num -= digitNumber(sqr(i).toInt())
     }
-    return digit(abs(remainLength - 1), sqr(i).toInt())
+    return digit(abs(num - 1), sqr(i).toInt())
 }
 
 /**

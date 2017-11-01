@@ -119,7 +119,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val avr = a + b + c - max - min
     val cos = (pow(min, 2.0) + pow(avr, 2.0) - pow(max, 2.0)) / (2 * avr * min)
     return if (cos > 0 && cos < 1) 0
-    else if (abs(cos) < 1e-6) 1
+    else if (abs(cos) < 1e-7) 1
     else if (cos < 0 && cos > -1) 2
     else -1
 }
