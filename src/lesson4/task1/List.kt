@@ -2,12 +2,9 @@
 package lesson4.task1
 
 import lesson1.task1.*
-import lesson3.task1.maxDivisor
-import lesson2.task2.figure
+import lesson2.task2.digit
 import lesson3.task1.minDivisor
 import java.lang.Math.*
-import java.math.BigInteger
-import kotlin.text.Typography.half
 
 /**
  * Пример
@@ -150,7 +147,7 @@ fun times(a: List<Double>, b: List<Double>): Double {
     var c = 0.0
     for (i in 0 until a.size)
         c += a[i] * b[i]
-return c
+    return c
 }
 
 
@@ -235,9 +232,8 @@ fun convert(n: Int, base: Int): List<Int> {
     return newSys
 }
 
-val figure = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c",
-        "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
-        "t", "u", "v", "w", "x", "y", "z")
+val figure = "0123456789abcdefghijklmnopqrstuvwxyz"
+
 /**
  * Сложная
  *
@@ -247,7 +243,7 @@ val figure = arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b",
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String =
-        convert(n, base).joinToString("") { figure[it] }
+        convert(n, base).joinToString("") { figure[it].toString() }
 
 
 /**
@@ -328,12 +324,12 @@ fun hundreds (n: Int) : MutableList<String> {
     val num = mutableListOf<String>()
     if (n < 1) return mutableListOf()
     if (n % 100 in (10..19))
-        num.add(secondArr[figure(1, n)])
+        num.add(secondArr[digit(1, n)])
     else {
-        num.add(firstArr[figure(1, n)])
-        num.add(0, thirdArr[figure(2, n)])
+        num.add(firstArr[digit(1, n)])
+        num.add(0, thirdArr[digit(2, n)])
     }
-    num.add(0, fourthArr[figure(3, n)])
+    num.add(0, fourthArr[digit(3, n)])
     return num
 }
 

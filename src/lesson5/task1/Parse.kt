@@ -71,13 +71,15 @@ val months = arrayOf("января", "февраля", "марта", "апрел
 
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
+    if (parts.size != 3)
+        return ""
     try {
         val day = parts[0].toInt()
         val month = months.indexOf(parts[1]) + 1
         val year = parts[2].toInt()
         if (month == 0 || day <= 0 || year < 0) return ""
         return String.format("%02d.%02d.%d", day, month, year)
-    } catch (e : Exception) { return ""}
+    } catch (e : NumberFormatException) { return ""}
 }
 
 /**
@@ -89,13 +91,16 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     val parts = digital.split(".")
+    if (parts.size != 3)
+        return ""
     try {
         val day = parts[0].toInt()
-        val month = months[parts[1].toInt() - 1]
+        val month = try{ months[parts[1].toInt() - 1] }
+        catch (e: ArrayIndexOutOfBoundsException) { return "" }
         val year = parts[2].toInt()
         if (year < 0 || day <= 0) return ""
         return String.format("%d %s %d", day, month, year)
-    } catch (e: Exception) { return "" }
+    } catch (e: NumberFormatException) { return "" }
 }
 /**
  * Средняя
@@ -151,8 +156,8 @@ fun bestHighJump(jumps: String): Int {
             val elements = parts[i].split("")
             for (el in elements)
                 if (el == "+") {
-                        results.add(parts[i - 1].toInt())
-                        break
+                    results.add(parts[i - 1].toInt())
+                    break
                 }
                 }
     }
