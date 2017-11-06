@@ -12,18 +12,17 @@ import java.lang.Math.*
 fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
         sqr(x - x0) + sqr(y - y0) <= sqr(r)
 
-fun sqrInt(x: Int): Int = x * x
 
 fun powInt(num: Int, degree: Int): Int {
-    var number = num
+    var number = 1
     for (i in 1..degree)
-        number *= number
+        number *= num
     return number
 }
 
-fun digit(n: Int, number: Int) : Int = number / powInt(10, n - 1) % 10
+fun digit(n: Int, number: Int): Int = number / powInt(10, n - 1) % 10
 
-fun sum (num: Int, n1: Int, n2: Int) : Int = digit(n1, num) + digit(n2, num)
+fun sum (num: Int, n1: Int, n2: Int): Int = digit(n1, num) + digit(n2, num)
 /**
  * Простая
  *

@@ -207,7 +207,7 @@ class Tests {
         assertEquals(5, squareSequenceDigit(7))
         assertEquals(6, squareSequenceDigit(12))
         assertEquals(0, squareSequenceDigit(17))
-        assertEquals(9, squareSequenceDigit(27))
+        assertEquals(4, squareSequenceDigit(49545))
     }
 
     @Test

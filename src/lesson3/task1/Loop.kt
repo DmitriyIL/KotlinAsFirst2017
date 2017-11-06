@@ -5,6 +5,8 @@ import lesson1.task1.sqr
 import lesson2.task2.*
 import java.lang.Math.*
 
+fun sqr(x: Int): Int = x * x
+
 /**
  * Пример
  *
@@ -71,7 +73,7 @@ fun digitNumber(n: Int): Int {
         number /= 10
         count++
     } while (number > 0)
- return count
+    return count
 }
 
 /**
@@ -81,13 +83,13 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-var n1 = 0
-var n2 = 1
-for (i in 2..n) {
-    n2 += n1
-  n1 = n2 - n1
-}
-return n2
+    var n1 = 0
+    var n2 = 1
+    for (i in 2..n) {
+        n2 += n1
+        n1 = n2 - n1
+    }
+    return n2
 }
 
 
@@ -148,7 +150,7 @@ fun isCoPrime(m: Int, n: Int): Boolean = gcd(m, n) == 1
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     for (i in sqrt(m.toDouble()).toInt()..sqrt(n.toDouble()).toInt())
-        if (sqrInt(i) in m..n) return true
+        if (sqr(i) in m..n) return true
     return false
 }
 
