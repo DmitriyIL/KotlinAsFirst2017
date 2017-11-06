@@ -3,6 +3,7 @@ package lesson6.task1
 
 import lesson1.task1.angleInRadian
 import lesson1.task1.sqr
+import lesson2.task2.pointInsideCircle
 import java.lang.Math.*
 
 /**
@@ -245,5 +246,28 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun minContainingCircle(vararg points: Point): Circle {
+    when {
+        points.isEmpty() -> throw IllegalArgumentException()
+        points.size == 1 -> return Circle(points[0], 0.0)
+        points.size == 2 -> return circleByDiameter(Segment(points[0], points[1]))
+    }
+    var rightCircle = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
+    for (i in 0 until points.size)
+        for (j in i + 1 until points.size) {
+            val circle = circleByDiameter(Segment(points[i], points[j]))
+            for (p in points)
+                if (points.all { circle.contains(it) } && circle.radius < rightCircle.radius)
+                    rightCircle = circle
+    }
+    for (i in 0 until points.size)
+        for (j in i + 1 until points.size)
+            for (k in j + 1 until points.size) {
+                val circle = circleByThreePoints(points[i], points[j], points[k])
+                for (p in points)
+                    if (points.all { circle.contains(it) } && circle.radius < rightCircle.radius)
+                        rightCircle = circle
+    }
+    return rightCircle
+}
 
