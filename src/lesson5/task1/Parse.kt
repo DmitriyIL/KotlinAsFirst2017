@@ -90,17 +90,12 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    val parts = digital.split(".")
-    if (parts.size != 3)
-        return ""
-    try {
-        val day = parts[0].toInt()
-        val month = try{ months[parts[1].toInt() - 1] }
-        catch (e: ArrayIndexOutOfBoundsException) { return "" }
-        val year = parts[2].toInt()
-        if (year < 0 || day <= 0) return ""
-        return String.format("%d %s %d", day, month, year)
+    val parts = try {
+        digital.split(".").map { it.toInt() }
     } catch (e: NumberFormatException) { return "" }
+    if (parts.size != 3 || parts[2] < 0 || parts[0] <= 0 || parts[1] !in 1..12)
+        return ""
+    return String.format("%d %s %d", parts[0], months[parts[1] - 1], parts[2])
 }
 /**
  * Средняя
@@ -151,22 +146,12 @@ fun bestLongJump(jumps: String): Int = try {
 fun bestHighJump(jumps: String): Int {
     val results = mutableListOf<Int>()
     val parts = jumps.split(" ")
-    try {
-        for (i in 0 until parts.size) {
-            val elements = parts[i].split("")
-            for (el in elements)
-                if (el == "+") {
-                    results.add(parts[i - 1].toInt())
-                    break
-                }
-                }
+    for (i in 1 until parts.size) {
+        val elements = parts[i].split("")
+        if (elements.any { it == "+" })
+            results.add(parts[i - 1].toInt())
     }
-    catch (e : IndexOutOfBoundsException) { return -1 }
-    var max = -1
-    for (el in results)
-        if (el > max)
-            max = el
-    return max
+    return results.max() ?: -1
 }
 /**
  * Сложная
@@ -178,31 +163,18 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    val e = IllegalArgumentException()
-    if (expression == "") throw e
-    val parts = expression.split(" ").filter { it != "" }
-    var elements = parts[0].split("").filter { it != "" }
-    for (el in elements) {
-        if (el in ("0".."9")) continue
-        else {
-            throw e
-        }
-    }
+    check (expression.isNotEmpty()) { IllegalArgumentException() }
+    val parts = expression.split(" ")
+    try{
     var result = parts[0].toInt()
-    var num: Int
-    for (i in 1 until parts.size step 2) {
-        elements = parts[i + 1].split("")
-        elements = elements.filter { it != "" }
-        for (el in elements) if (el in ("0".."9")) continue
-        else throw e
-        num = parts[i + 1].toInt()
-        when (parts[i]) {
-            "+" -> result += num
-            "-" -> result -= num
-            else -> throw e
-        }
-    }
+    for (i in 2 until parts.size step 2)
+            when (parts[i - 1]) {
+                "+" -> result += parts[i].toInt()
+                "-" -> result -= parts[i].toInt()
+                else -> throw IllegalArgumentException()
+            }
     return result
+    } catch (e: NumberFormatException) { throw IllegalArgumentException() }
 }
 
 /**
@@ -215,35 +187,16 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    val string = str.toLowerCase()
-    var elements = string.split("")
-    elements = elements.filter { it != "" }
-    var i = 0
-    var index1 : Int
-    var index2 = -1
-    try {
-        do {
-            if (i > 0)
-                i = index2
-            index1 = i
-            var word1 = ""
-            while (elements[i] != " ") {
-                word1 += elements[i]
-                i++
-            }
-            i++
-            index2 = i
-            var word2 = ""
-            while (elements[i] != " ") {
-                word2 += elements[i]
-                i++
-            }
-            i++
-        } while (word1 != word2)
-    } catch (e : Exception) { return -1}
-    return index1
+    val words = str.toLowerCase().split(" ")
+    var index = 0
+    for (i in 0 until words.size - 1) {
+        if (words[i] == words[i + 1])
+            return index
+        else
+            index += words[i].length + 1
+    }
+    return -1
 }
-
 /**
  * Сложная
  *
@@ -259,25 +212,20 @@ fun mostExpensive(description: String): String {
     val goods = description.split("; ")
     val prices = mutableListOf<Double>()
     val names = mutableListOf<String>()
-    var max = 0.0
     var iMax = 0
-
-    try {
-       for (elements in goods) {
-           val el = elements.split(" ")
-           names.add(el[0])
-           prices.add(el[1].toDouble())
-       }
-
-       for (i in 0 until goods.size) {
-           if (prices[i] < 0) return ""
-           if (prices[i] > max) {
-               max = prices[i]
-               iMax = i
-           }
-       }
-   } catch (e : Exception) {return ""}
-
+    for (good in goods) {
+        val elements = good.split(" ")
+        if (elements.size != 2) return ""
+        names.add(elements[0])
+        try {
+            prices.add(elements[1].toDouble())
+        } catch (e: NumberFormatException) { return "" }
+    }
+    for (i in 0 until goods.size) {
+        if (prices[i] < 0) return ""
+        if (prices[i] > prices[iMax])
+            iMax = i
+    }
     return names[iMax]
 }
 
@@ -294,23 +242,18 @@ fun mostExpensive(description: String): String {
  */
 fun fromRoman(roman: String): Int {
     if (roman == "") return -1
-    val digits1 = arrayOf("I", "V", "X", "L", "C", "D", "M", "error")
-    val digits2 = arrayOf(1, 5, 10, 50, 100, 500, 1000)
-    var sings = roman.split("")
-    sings = sings.filter { it != "" }
+    val romans = arrayOf('I', 'V', 'X', 'L', 'C', 'D', 'M')
+    val decimal = arrayOf(1, 5, 10, 50, 100, 500, 1000)
     var theNum = 0
-    var currentNum = 0
     var pastNum = 0
-    for (i in sings.size - 1 downTo 0) {
-        for (j in 0..7) {
-            if (sings[i] == digits1[j]) {
-                currentNum = digits2[j]
-                break
-            }
-            if (j == 7) return -1
-        }
-        if (currentNum >= pastNum) theNum += currentNum
-        else theNum -= currentNum
+    for (i in roman.length - 1 downTo 0) {
+        val romIndex = romans.indexOf(roman[i])
+        if (romIndex == -1) return -1
+        val currentNum = decimal[romIndex]
+        if (currentNum >= pastNum)
+            theNum += currentNum
+        else
+            theNum -= currentNum
         pastNum = currentNum
     }
     return theNum
