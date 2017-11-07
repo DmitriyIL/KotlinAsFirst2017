@@ -308,7 +308,7 @@ fun validation(commands: String) {
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     validation(commands)
-    val elements = MutableList(cells) {0}
+    val elements = MutableList(cells) { 0 }
     val listOfCycles = mutableListOf<Int>()
     var count = 0
     var iCell = cells / 2
@@ -329,8 +329,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     if (openCycles == -1) break
                 }
             } else listOfCycles.add(0, iCom)
-        }
-        else if (commands[iCom] == ']') {
+        } else if (commands[iCom] == ']') {
             if (elements[iCell] != 0) iCom = listOfCycles[0]
             else listOfCycles.removeAt(0)
         } else throw IllegalArgumentException()
