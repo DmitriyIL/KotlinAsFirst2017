@@ -254,15 +254,17 @@ fun minContainingCircle(vararg points: Point): Circle {
     }
     var rightCircle = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
     for (i in 0 until points.size)
-        for (j in i + 1 until points.size) {
+        for (j in 0 until points.size) {
+            if (j == i) continue
             val circle = circleByDiameter(Segment(points[i], points[j]))
             for (p in points)
                 if (points.all { circle.contains(it) } && circle.radius < rightCircle.radius)
                     rightCircle = circle
     }
     for (i in 0 until points.size)
-        for (j in i + 1 until points.size)
-            for (k in j + 1 until points.size) {
+        for (j in 0 until points.size)
+            for (k in 0 until points.size) {
+                if (j == i || k == j || k == i) continue
                 val circle = circleByThreePoints(points[i], points[j], points[k])
                 for (p in points)
                     if (points.all { circle.contains(it) } && circle.radius < rightCircle.radius)

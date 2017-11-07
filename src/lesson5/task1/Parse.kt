@@ -163,7 +163,7 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    check (expression.isNotEmpty()) { IllegalArgumentException() }
+    check (expression.isEmpty()) { IllegalArgumentException() }
     val parts = expression.split(" ")
     try{
     var result = parts[0].toInt()
@@ -223,8 +223,7 @@ fun mostExpensive(description: String): String {
     }
     for (i in 0 until goods.size) {
         if (prices[i] < 0) return ""
-        if (prices[i] > prices[iMax])
-            iMax = i
+        if (prices[i] > prices[iMax]) iMax = i
     }
     return names[iMax]
 }
@@ -250,10 +249,8 @@ fun fromRoman(roman: String): Int {
         val romIndex = romans.indexOf(roman[i])
         if (romIndex == -1) return -1
         val currentNum = decimal[romIndex]
-        if (currentNum >= pastNum)
-            theNum += currentNum
-        else
-            theNum -= currentNum
+        if (currentNum >= pastNum) theNum += currentNum
+        else theNum -= currentNum
         pastNum = currentNum
     }
     return theNum
