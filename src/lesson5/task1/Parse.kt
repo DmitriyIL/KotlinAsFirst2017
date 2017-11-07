@@ -1,6 +1,6 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson5.task1
-
+import java.util.ArrayDeque
 /**
  * Пример
  *
@@ -296,27 +296,24 @@ fun fromRoman(roman: String): Int {
  *
  */
 
-
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    val out = IllegalStateException()
-    val e = IllegalArgumentException()
+fun validation(commands: String) {
     var AMT = 0
     for (i in 0 until commands.length) {
         if (commands[i] == '[') AMT++
         else if (commands[i] == ']') AMT--
-        if (AMT < 0) throw e
+        if (AMT < 0) throw IllegalArgumentException()
     }
-    if (AMT != 0) throw e
-    val elements = mutableListOf<Int>()
-    for (i in 1..cells) {
-        elements.add(0)
-    }
+    if (AMT != 0) throw IllegalArgumentException()
+}
+
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    validation(commands)
+    val elements = MutableList(cells) {0}
     val listOfCycles = mutableListOf<Int>()
     var count = 0
     var iCell = cells / 2
     var iCom = 0
-    while (iCom < commands.length) {
-        if (count == limit) break
+    while (iCom < commands.length && count != limit) {
         if (commands[iCom] == '>') iCell++
         else if (commands[iCom] == '<') iCell--
         else if (commands[iCom] == ' ')
@@ -332,11 +329,12 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     if (openCycles == -1) break
                 }
             } else listOfCycles.add(0, iCom)
-        } else if (commands[iCom] == ']') {
+        }
+        else if (commands[iCom] == ']') {
             if (elements[iCell] != 0) iCom = listOfCycles[0]
             else listOfCycles.removeAt(0)
-        } else throw e
-        if (iCell >= cells || iCell < 0) throw out
+        } else throw IllegalArgumentException()
+        if (iCell >= cells || iCell < 0) throw IllegalStateException()
         count++
         iCom++
     }
