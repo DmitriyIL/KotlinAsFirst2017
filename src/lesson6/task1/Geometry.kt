@@ -131,6 +131,8 @@ fun diameter(vararg points: Point): Segment {
 fun circleByDiameter(diameter: Segment): Circle =
         Circle(diameter.center(), diameter.size() / 2)
 
+
+
 /**
  * Прямая, заданная точкой point и углом наклона angle (в радианах) по отношению к оси X.
  * Уравнение прямой: (y - point.y) * cos(angle) = (x - point.x) * sin(angle)
@@ -154,7 +156,6 @@ class Line private constructor(val b: Double, val angle: Double) {
         val x = (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle)
         val y = (b * sin(other.angle) - other.b * sin(angle)) / sin(other.angle - angle )
         return Point (x, y)
-
     }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
@@ -235,6 +236,7 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
      return Circle(center, center.distance(a))
 }
 
+
 /**
  * Очень сложная
  *
@@ -254,22 +256,21 @@ fun minContainingCircle(vararg points: Point): Circle {
     }
     var rightCircle = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
     for (i in 0 until points.size)
-        for (j in 0 until points.size) {
-            if (j == i) continue
+        for (j in i+1 until points.size) {
+            //if (i == j) continue
             val circle = circleByDiameter(Segment(points[i], points[j]))
             for (p in points)
                 if (points.all { circle.contains(it) } && circle.radius < rightCircle.radius)
                     rightCircle = circle
     }
     for (i in 0 until points.size)
-        for (j in 0 until points.size)
-            for (k in 0 until points.size) {
-                if (j == i || k == j || k == i) continue
-                val circle = circleByThreePoints(points[i], points[j], points[k])
+        for (j in i + 1 until points.size)
+            for (k in j + 1 until points.size) {
+                //if (j == i || k == j || k == i) continue
+                val circle = circleByThreePoints(points[k], points[i], points[j])
                 for (p in points)
                     if (points.all { circle.contains(it) } && circle.radius < rightCircle.radius)
                         rightCircle = circle
     }
     return rightCircle
 }
-
