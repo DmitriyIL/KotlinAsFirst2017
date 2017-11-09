@@ -17,6 +17,9 @@ data class Point(val x: Double, val y: Double) {
      */
 
     fun distance(other: Point): Double = Math.sqrt(sqr(x - other.x) + sqr(y - other.y))
+
+    override fun equals(other: Any?) =
+            other is Point && (abs(x - other.x) <= 10e-7) && (abs(y - other.y) <= 10e-7)
 }
 /**
  * Треугольник, заданный тремя точками (a, b, c, см. constructor ниже).
@@ -252,25 +255,14 @@ fun minContainingCircle(vararg points: Point): Circle {
     when {
         points.isEmpty() -> throw IllegalArgumentException()
         points.size == 1 -> return Circle(points[0], 0.0)
-        points.size == 2 -> return circleByDiameter(Segment(points[0], points[1]))
     }
-    var rightCircle = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
-    for (i in 0 until points.size)
-        for (j in i+1 until points.size) {
-            //if (i == j) continue
-            val circle = circleByDiameter(Segment(points[i], points[j]))
-            for (p in points)
-                if (points.all { circle.contains(it) } && circle.radius < rightCircle.radius)
-                    rightCircle = circle
-    }
-    for (i in 0 until points.size)
-        for (j in i + 1 until points.size)
-            for (k in j + 1 until points.size) {
-                //if (j == i || k == j || k == i) continue
-                val circle = circleByThreePoints(points[k], points[i], points[j])
-                for (p in points)
-                    if (points.all { circle.contains(it) } && circle.radius < rightCircle.radius)
-                        rightCircle = circle
-    }
-    return rightCircle
+    val diameter = diameter(*points)
+    val rightCircle = circleByDiameter(diameter)
+    var furtherPoint = rightCircle.center
+    for (p in points)
+        if (!rightCircle.contains(p) && rightCircle.center.distance(p) > rightCircle.center.distance(furtherPoint))
+            furtherPoint = p
+    return if (furtherPoint != rightCircle.center)
+        circleByThreePoints(diameter.end, diameter.begin, furtherPoint)
+           else rightCircle
 }
