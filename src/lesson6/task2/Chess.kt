@@ -25,6 +25,9 @@ data class Square(val column: Int, val row: Int) {
      */
     val letters = " abcdefgh"
 
+    val color = if (abs(row - column) % 2 == 0) "Black"
+    else "White"
+
     fun notation(): String = if (this.inside())
         letters[column] + "$row"
     else ""
@@ -128,7 +131,7 @@ fun rookTrajectory(start: Square, end: Square): List<Square> {
 
 fun bishopMoveNumber(start: Square, end: Square): Int =
         if (!start.inside() || !end.inside()) throw IllegalArgumentException()
-        else if (end.row % 2 != start.row % 2 || end.column % 2 != start.column % 2) -1
+        else if (start.color != end.color) -1
         else if (start == end) 0
         else if  (abs(start.row - end.row) == abs(start.column - end.column)) 1
         else 2

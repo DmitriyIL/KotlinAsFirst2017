@@ -22,7 +22,7 @@ fun powInt(num: Int, degree: Int): Int {
 
 fun digit(n: Int, number: Int): Int = number / powInt(10, n - 1) % 10
 
-fun sum (num: Int, n1: Int, n2: Int): Int = digit(n1, num) + digit(n2, num)
+fun summarize(num: Int, n1: Int, n2: Int): Int = digit(n1, num) + digit(n2, num)
 /**
  * Простая
  *
@@ -30,7 +30,7 @@ fun sum (num: Int, n1: Int, n2: Int): Int = digit(n1, num) + digit(n2, num)
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean =
-         sum(number, 1, 2) == sum(number, 3, 4)
+         summarize(number, 1, 2) == summarize(number, 3, 4)
 
 /**
  * Простая

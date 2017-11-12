@@ -162,12 +162,14 @@ fun times(a: List<Double>, b: List<Double>): Double {
  */
 fun polynom(p: List<Double>, x: Double): Double {
     val mutP = p.toMutableList()
+    var sum = 0.0
     var degree = x
     for (i in 1 until mutP.size) {
         mutP[i] *= degree
+        sum += mutP[i]
         degree *= x
     }
-    return mutP.sum()
+    return sum
 }
 
 /**
@@ -253,7 +255,6 @@ fun convertToString(n: Int, base: Int): String =
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-
 fun decimal(digits: List<Int>, base: Int): Int {
     var num = 0.0
     var degree = pow(base.toDouble(), digits.size - 1.0)
@@ -263,6 +264,7 @@ fun decimal(digits: List<Int>, base: Int): Int {
     }
     return num.toInt()
 }
+
 
 /**
  * Сложная
@@ -284,7 +286,6 @@ fun decimalFromString(str: String, base: Int): Int {
 }
 
 
-
 /**
  * Сложная
  *
@@ -298,10 +299,11 @@ fun roman(n: Int): String {
     val secondNum = arrayOf("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
     val thirdNum = arrayOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
     var num = ""
-    for (i in 1..n/1000)
-        num += "M"
+    for (i in 1..n / 1000) num += "M"
     return num + thirdNum[n / 100 % 10] + secondNum[n / 10 % 10] + firstNum[n % 10]
 }
+
+
 /**
  * Очень сложная
  *
