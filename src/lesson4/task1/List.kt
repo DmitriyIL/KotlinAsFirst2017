@@ -161,12 +161,10 @@ fun times(a: List<Double>, b: List<Double>): Double {
  * Значение пустого многочлена равно 0.0 при любом x.
  */
 fun polynom(p: List<Double>, x: Double): Double {
-    val mutP = p.toMutableList()
     var sum = 0.0
-    var degree = x
-    for (i in 1 until mutP.size) {
-        mutP[i] *= degree
-        sum += mutP[i]
+    var degree = 1.0
+    for (i in 0 until p.size) {
+        sum += p[i] * degree
         degree *= x
     }
     return sum
