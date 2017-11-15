@@ -216,20 +216,16 @@ fun kingMoveNumber(start: Square, end: Square): Int {
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun kingTrajectory(start: Square, end: Square): List<Square> {
-    if (start == end) return mutableListOf(start)
     val points = mutableListOf(start)
-    val obliquelySteps = min(abs(end.column - start.column), abs(start.row - end.row))
-    var columnSign = (end.column - start.column) / abs(end.column - start.column)
-    var rowSign = (end.row - start.row) / abs(end.row - start.row)
-    for (i in 1..obliquelySteps){
-        points.add(Square(start.column + columnSign * i, start.row + rowSign * i))
+    var columnSign = if (end.column > start.column) 1 else -1
+    var rowSign = if (end.row > start.row) 1 else -1
+    while (end.row != points.last().row && end.column != points.last().column){
+        points.add(Square(points.last().column + columnSign, points.last().row + rowSign))
     }
-    val startSquare = points.last()
-    val straightSteps = max(abs(end.column - start.column) - obliquelySteps, abs(end.row - start.row) - obliquelySteps)
-    if (end.column == startSquare.column) columnSign = 0
-    if (end.row == startSquare.row) rowSign = 0
-    for (i in 1..straightSteps){
-        points.add(Square(startSquare.column + columnSign * i, startSquare.row + rowSign * i))
+    if (end.column == points.last().column) columnSign = 0
+    else rowSign = 0
+    while (points.last() != end){
+        points.add(Square(points.last().column + columnSign, points.last().row + rowSign))
     }
     return points
 }
