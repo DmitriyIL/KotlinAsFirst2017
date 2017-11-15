@@ -1,5 +1,5 @@
 package lesson6.task3
-
+import lesson6.task2.*
 import java.util.*
 
 class Graph {
@@ -48,6 +48,28 @@ class Graph {
         }
         return -1
     }
+
+    fun newBFS(start: String, finish: String) = newBFS(this[start], this[finish])
+
+    private fun newBFS(start: Vertex, finish: Vertex): List<Square> {
+        val queue = ArrayDeque<Vertex>()
+        queue.add(start)
+        val visited = mutableMapOf(start to listOf<Square>())
+        while (queue.isNotEmpty()) {
+            val next = queue.poll()
+            val distance = visited[next]!! + square(next.name)
+            if (next == finish) return distance
+            for (neighbor in next.neighbors) {
+                if (neighbor in visited) continue
+                visited.put(neighbor, distance)
+                queue.add(neighbor)
+            }
+        }
+        return listOf()
+    }
+
+
+
 
     /**
      * Пример

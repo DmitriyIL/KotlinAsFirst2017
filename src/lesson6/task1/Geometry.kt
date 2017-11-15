@@ -18,6 +18,10 @@ data class Point(val x: Double, val y: Double) {
 
     fun distance(other: Point): Double = Math.sqrt(sqr(x - other.x) + sqr(y - other.y))
 
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+
     override fun equals(other: Any?) =
             other is Point && (abs(x - other.x) <= 10e-10) && (abs(y - other.y) <= 10e-10)
 }

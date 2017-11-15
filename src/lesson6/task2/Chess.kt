@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson6.task2
 
+import lesson6.task3.*
 import java.lang.Math.*
 
 /**
@@ -9,6 +10,7 @@ import java.lang.Math.*
  * Горизонтали нумеруются снизу вверх, вертикали слева направо.
  */
 data class Square(val column: Int, val row: Int) {
+
     /**
      * Пример
      *
@@ -34,6 +36,11 @@ data class Square(val column: Int, val row: Int) {
 
     override fun equals(other: Any?): Boolean =
             other is Square && row == other.row && column == other.column
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
+
 }
 
 /**
@@ -188,7 +195,11 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
  * Пример: kingMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
-fun kingMoveNumber(start: Square, end: Square): Int = TODO()
+fun kingMoveNumber(start: Square, end: Square): Int {
+    if (!start.inside() || !end.inside())
+        throw  IllegalArgumentException()
+    return max(abs(end.column - start.column), abs(end.row - start.row))
+}
 
 /**
  * Сложная
@@ -204,7 +215,24 @@ fun kingMoveNumber(start: Square, end: Square): Int = TODO()
  *          kingTrajectory(Square(3, 5), Square(6, 2)) = listOf(Square(3, 5), Square(4, 4), Square(5, 3), Square(6, 2))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun kingTrajectory(start: Square, end: Square): List<Square> {
+    if (start == end) return mutableListOf(start)
+    val points = mutableListOf(start)
+    val obliquelySteps = min(abs(end.column - start.column), abs(start.row - end.row))
+    var columnSign = (end.column - start.column) / abs(end.column - start.column)
+    var rowSign = (end.row - start.row) / abs(end.row - start.row)
+    for (i in 1..obliquelySteps){
+        points.add(Square(start.column + columnSign * i, start.row + rowSign * i))
+    }
+    val startSquare = points.last()
+    val straightSteps = max(abs(end.column - start.column) - obliquelySteps, abs(end.row - start.row) - obliquelySteps)
+    if (end.column == startSquare.column) columnSign = 0
+    if (end.row == startSquare.row) rowSign = 0
+    for (i in 1..straightSteps){
+        points.add(Square(startSquare.column + columnSign * i, startSquare.row + rowSign * i))
+    }
+    return points
+}
 
 /**
  * Сложная
@@ -229,7 +257,26 @@ fun kingTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = TODO()
+fun knightMoveGraph(): Graph{
+    val g = Graph()
+    for (column in 1..8)
+        for (row in 1..8)
+            g.addVertex(Square(column, row).notation())
+    for (column in 1..8){
+        for (row in 1..8){
+            for (i in -2..2)
+                for (j in -2..2){
+                    if (abs(i) == abs(j) || i == 0 || j == 0) continue
+                    if (Square(column + i, row + j).inside())
+                        g.connect(Square(column, row).notation(), Square(column + i, row + j).notation())
+                }
+        }
+    }
+    return g
+}
+
+fun knightMoveNumber(start: Square, end: Square): Int =
+        knightMoveGraph().bfs(start.notation(), end.notation())
 
 /**
  * Очень сложная
@@ -251,4 +298,6 @@ fun knightMoveNumber(start: Square, end: Square): Int = TODO()
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+
+fun knightTrajectory(start: Square, end: Square): List<Square> =
+        knightMoveGraph().newBFS(start.notation(), end.notation())
