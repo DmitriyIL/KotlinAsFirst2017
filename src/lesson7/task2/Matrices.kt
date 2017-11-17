@@ -3,6 +3,7 @@ package lesson7.task2
 
 import lesson7.task1.Matrix
 import lesson7.task1.createMatrix
+import java.lang.Math.min
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -59,8 +60,29 @@ operator fun Matrix<Int>.plus(other: Matrix<Int>): Matrix<Int> {
  * 10 11 12  5
  *  9  8  7  6
  */
-fun generateSpiral(height: Int, width: Int): Matrix<Int> = TODO()
 
+fun generateSpiral(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 0)
+    var passedCircles = 0
+    var counter = 0
+    val countLimit = height * width
+    do {
+        for (i in 0 + passedCircles until result.width - passedCircles) {
+            result[0 + passedCircles, i] = ++counter
+        }
+        for (i in 1 + passedCircles until result.height - passedCircles) {
+            result[i , result.width - 1 - passedCircles] = ++counter
+        }
+        for (i in result.width - 2 - passedCircles downTo 0 + passedCircles) {
+            if (counter < countLimit) result[result.height - 1 - passedCircles, i] = ++counter
+        }
+        for (i in result.height - 2 - passedCircles downTo 1 + passedCircles) {
+            if (counter < countLimit) result[i, 0 + passedCircles] = ++counter
+        }
+        passedCircles++
+    } while(counter < countLimit)
+    return result
+}
 /**
  * Сложная
  *
