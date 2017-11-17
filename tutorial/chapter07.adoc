@@ -302,7 +302,7 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
 
 [source,kotlin]
 ----
-val array = Array(width) { index -> e } // или просто Array(width) { e }
+val matrix = Array(width) { index -> e } // или просто Array(width) { e }
 ----
 
 При создании массива массивов следует иметь в виду, что элементами внешнего массива в свою очередь являются массивы, 

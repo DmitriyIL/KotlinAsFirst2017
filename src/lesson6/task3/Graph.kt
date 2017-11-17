@@ -49,19 +49,19 @@ class Graph {
         return -1
     }
 
-    fun newBFS(start: String, finish: String) = newBFS(this[start], this[finish])
+    fun bfsWithNotes(start: String, finish: String) = bfsWithNotes(this[start], this[finish])
 
-    private fun newBFS(start: Vertex, finish: Vertex): List<Square> {
+    private fun bfsWithNotes(start: Vertex, finish: Vertex): List<Square> {
         val queue = ArrayDeque<Vertex>()
         queue.add(start)
         val visited = mutableMapOf(start to listOf<Square>())
         while (queue.isNotEmpty()) {
             val next = queue.poll()
-            val distance = visited[next]!! + square(next.name)
-            if (next == finish) return distance
+            val notes = visited[next]!! + square(next.name)
+            if (next == finish) return notes
             for (neighbor in next.neighbors) {
                 if (neighbor in visited) continue
-                visited.put(neighbor, distance)
+                visited.put(neighbor, notes)
                 queue.add(neighbor)
             }
         }

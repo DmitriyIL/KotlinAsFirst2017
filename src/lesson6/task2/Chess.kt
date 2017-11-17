@@ -253,21 +253,19 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveGraph(): Graph{
+fun knightMoveGraph(): Graph {
     val g = Graph()
     for (column in 1..8)
         for (row in 1..8)
             g.addVertex(Square(column, row).notation())
-    for (column in 1..8){
-        for (row in 1..8){
+    for (column in 1..8)
+        for (row in 1..8)
             for (i in -2..2)
-                for (j in -2..2){
+                for (j in -2..2) {
                     if (abs(i) == abs(j) || i == 0 || j == 0) continue
                     if (Square(column + i, row + j).inside())
                         g.connect(Square(column, row).notation(), Square(column + i, row + j).notation())
                 }
-        }
-    }
     return g
 }
 
@@ -296,4 +294,4 @@ fun knightMoveNumber(start: Square, end: Square): Int =
  */
 
 fun knightTrajectory(start: Square, end: Square): List<Square> =
-        knightMoveGraph().newBFS(start.notation(), end.notation())
+        knightMoveGraph().bfsWithNotes(start.notation(), end.notation())
