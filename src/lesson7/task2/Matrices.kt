@@ -133,31 +133,28 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
  * 10 13 16 18
  * 14 17 19 20
  */
-fun main(args: Array<String>) {
-    for (i in 1..5)
-        for (j in 1..5)
-            println(generateSnake(i,j).toString() + "\n")
-}
 
 fun generateSnake(height: Int, width: Int): Matrix<Int> {
     val result = createMatrix(height, width, 0)
     var counter = 0
-    for (i in 0 until width) {
-        var j = 0
+    for (column in 0 until width) {
+        var row = 0
         do {
-            result[j, i - j] = ++counter
-            j++
-        } while (j <= i && j < height)
+            result[row, column - row] = ++counter
+            row++
+        } while (row <= column)
     }
-    for (i in 1 until height) {
-        var j = 0
+    for (row in 1 until height) {
+        var column = 0
         do {
-            result[i + j, width - 1 - j] = ++counter
-            j++
-        } while (i + j < height && j < width)
+            result[row + column, width - 1 - column] = ++counter
+            column++
+        } while (row + column < height && column < width)
     }
     return result
 }
+
+
 /**
  * Средняя
  *
@@ -169,7 +166,23 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> {
  * 4 5 6      8 5 2
  * 7 8 9      9 6 3
  */
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
+fun main(args: Array<String>) {
+    println(generateSnake(5, 5)).toString()
+}
+
+fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
+    if (matrix.height != matrix.width) throw IllegalArgumentException()
+    val size = matrix.height
+    val result = createMatrix(size, size, matrix[0, 0])
+    for (row in 0 until size)
+        for (column in 0 until size)
+            result[row, column] = matrix[row, column]
+    for (row in 0 until size){
+        for (column in 0 until size)
+            result[column, size - 1 - row] = matrix[row, column]
+    }
+    return result
+}
 
 /**
  * Сложная
