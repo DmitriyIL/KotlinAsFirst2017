@@ -67,20 +67,20 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     var counter = 0
     val countLimit = height * width
     do {
-        for (i in 0 + passedCircles until result.width - passedCircles) {
+        for (i in 0 + passedCircles until width - passedCircles) {
             result[0 + passedCircles, i] = ++counter
         }
-        for (i in 1 + passedCircles until result.height - passedCircles) {
-            result[i , result.width - 1 - passedCircles] = ++counter
+        for (i in 1 + passedCircles until height - passedCircles) {
+            result[i, width - 1 - passedCircles] = ++counter
         }
-        for (i in result.width - 2 - passedCircles downTo 0 + passedCircles) {
-            if (counter < countLimit) result[result.height - 1 - passedCircles, i] = ++counter
+        for (i in width - 2 - passedCircles downTo 0 + passedCircles) {
+            if (counter < countLimit) result[height - 1 - passedCircles, i] = ++counter
         }
-        for (i in result.height - 2 - passedCircles downTo 1 + passedCircles) {
+        for (i in height - 2 - passedCircles downTo 1 + passedCircles) {
             if (counter < countLimit) result[i, 0 + passedCircles] = ++counter
         }
         passedCircles++
-    } while(counter < countLimit)
+    } while (counter < countLimit)
     return result
 }
 /**
@@ -97,8 +97,29 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
  *  1  2  2  2  2  1
  *  1  1  1  1  1  1
  */
-fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
 
+
+fun generateRectangles(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 0)
+    var passedCircles = 0
+    val circles = min(height, width) / 2 + min(height, width) % 2
+    do {
+        for (i in 0 + passedCircles until width - passedCircles) {
+            result[0 + passedCircles, i] = passedCircles + 1
+        }
+        for (i in 1 + passedCircles until height - passedCircles) {
+            result[i, width - 1 - passedCircles] = passedCircles + 1
+        }
+        for (i in width - 2 - passedCircles downTo 0 + passedCircles) {
+            result[height - 1 - passedCircles, i] = passedCircles + 1
+        }
+        for (i in height - 2 - passedCircles downTo 1 + passedCircles) {
+            result[i, 0 + passedCircles] = passedCircles + 1
+        }
+        passedCircles++
+    } while (passedCircles < circles)
+    return result
+}
 /**
  * Сложная
  *
@@ -112,8 +133,31 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> = TODO()
  * 10 13 16 18
  * 14 17 19 20
  */
-fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
+fun main(args: Array<String>) {
+    for (i in 1..5)
+        for (j in 1..5)
+            println(generateSnake(i,j).toString() + "\n")
+}
 
+fun generateSnake(height: Int, width: Int): Matrix<Int> {
+    val result = createMatrix(height, width, 0)
+    var counter = 0
+    for (i in 0 until width) {
+        var j = 0
+        do {
+            result[j, i - j] = ++counter
+            j++
+        } while (j <= i && j < height)
+    }
+    for (i in 1 until height) {
+        var j = 0
+        do {
+            result[i + j, width - 1 - j] = ++counter
+            j++
+        } while (i + j < height && j < width)
+    }
+    return result
+}
 /**
  * Средняя
  *
