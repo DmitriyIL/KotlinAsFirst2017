@@ -66,22 +66,22 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
     val result = createMatrix(height, width, 0)
     var passedCircles = 0
     var counter = 0
-    val countLimit = height * width
+    val countLim = height * width
     do {
-        for (i in 0 + passedCircles until width - passedCircles) {
-            result[0 + passedCircles, i] = ++counter
+        for (column in passedCircles until width - passedCircles) {
+            result[passedCircles, column] = ++counter
         }
-        for (i in 1 + passedCircles until height - passedCircles) {
-            result[i, width - 1 - passedCircles] = ++counter
+        for (row in 1 + passedCircles until height - passedCircles) {
+            result[row, width - 1 - passedCircles] = ++counter
         }
-        for (i in width - 2 - passedCircles downTo 0 + passedCircles) {
-            if (counter < countLimit) result[height - 1 - passedCircles, i] = ++counter
+        for (column in width - 2 - passedCircles downTo 0 + passedCircles) {
+            if (counter < countLim) result[height - 1 - passedCircles, column] = ++counter
         }
-        for (i in height - 2 - passedCircles downTo 1 + passedCircles) {
-            if (counter < countLimit) result[i, 0 + passedCircles] = ++counter
+        for (row in height - 2 - passedCircles downTo 1 + passedCircles) {
+            if (counter < countLim) result[row, 0 + passedCircles] = ++counter
         }
         passedCircles++
-    } while (counter < countLimit)
+    } while (counter < countLim)
     return result
 }
 /**
@@ -103,22 +103,22 @@ fun generateSpiral(height: Int, width: Int): Matrix<Int> {
 fun generateRectangles(height: Int, width: Int): Matrix<Int> {
     val result = createMatrix(height, width, 0)
     var passedCircles = 0
-    val circles = min(height, width) / 2 + min(height, width) % 2
+    val circlesLim = min(height, width) / 2 + min(height, width) % 2
     do {
-        for (i in 0 + passedCircles until width - passedCircles) {
-            result[0 + passedCircles, i] = passedCircles + 1
+        for (column in passedCircles until width - passedCircles) {
+            result[passedCircles, column] = passedCircles + 1
         }
-        for (i in 1 + passedCircles until height - passedCircles) {
-            result[i, width - 1 - passedCircles] = passedCircles + 1
+        for (row in 1 + passedCircles until height - passedCircles) {
+            result[row, width - 1 - passedCircles] = passedCircles + 1
         }
-        for (i in width - 2 - passedCircles downTo 0 + passedCircles) {
-            result[height - 1 - passedCircles, i] = passedCircles + 1
+        for (column in width - 2 - passedCircles downTo 0 + passedCircles) {
+            result[height - 1 - passedCircles, column] = passedCircles + 1
         }
-        for (i in height - 2 - passedCircles downTo 1 + passedCircles) {
-            result[i, 0 + passedCircles] = passedCircles + 1
+        for (row in height - 2 - passedCircles downTo 1 + passedCircles) {
+            result[row, 0 + passedCircles] = passedCircles + 1
         }
         passedCircles++
-    } while (passedCircles < circles)
+    } while (passedCircles < circlesLim)
     return result
 }
 /**
@@ -332,7 +332,8 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
 fun main(args: Array<String>) {
-    println(canOpenLock(createMatrix(listOf(listOf(1), listOf(0), listOf(1))), createMatrix(listOf(listOf(1,1,1,0,0,1,1,0,1), listOf(1,0,1,0,0,1,1,1,0), listOf(1,0,0,1,0,0,1,1,0), listOf(1,0,1,1,0,1,0,0,0), listOf(0,0,1,0,1,1,1,0,1), listOf(1,0,0,0,0,1,0,0,0)))))
+    println(canOpenLock(key = createMatrix(listOf(listOf(0), listOf(0))),
+            lock = createMatrix(listOf(listOf(1), listOf(1)))))
 }
 
 
