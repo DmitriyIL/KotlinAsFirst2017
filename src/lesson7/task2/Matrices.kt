@@ -330,35 +330,21 @@ fun main(args: Array<String>) {
 
 
 fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
-    val invertKey = invertKey(key)
+    for (i in 0 until key.height)
+        for (j in 0 until key.width)
+            key[i, j] = if (key[i, j] == 1) 0 else 1
     for (rowShift in 0..lock.height - key.height) {
         for (columnShift in 0..lock.width - key.width) {
-            val subMatrix = createSubMatrix(lock,
-                    Cell(rowShift, columnShift),
-                    Cell(key.height - 1 + rowShift, key.width - 1 + columnShift))
-            if (subMatrix == invertKey) return Triple(true, rowShift, columnShift)
+            val subMatrix = createMatrix(key.height, key.width, 0)
+            for (row in 0 until subMatrix.height)
+                for (column in 0 until subMatrix.width)
+                    subMatrix[row, column] = lock[row + rowShift, column + columnShift]
+            if (subMatrix == key) return Triple(true, rowShift, columnShift)
         }
     }
     return Triple(false, 0, 0)
 }
 
-fun invertKey(key: Matrix<Int>): Matrix<Int> {
-    for (i in 0 until key.height)
-        for (j in 0 until key.width)
-            key[i, j] = if (key[i, j] == 1) 0 else 1
-    return key
-}
-
-
-fun <E> createSubMatrix(matrix: Matrix<E>, start: Cell, end: Cell): Matrix<E> {
-    val result = createMatrix(end.row - start.row + 1,
-            end.column - start.column + 1,
-            matrix[0, 0])
-    for (row in 0 until result.height)
-        for (column in 0 until result.width)
-            result[row, column] = matrix[row + start.row, column + start.column]
-    return result
-}
 /**
  * Простая
  *
