@@ -135,23 +135,15 @@ fun generateRectangles(height: Int, width: Int): Matrix<Int> {
  * 14 17 19 20
  */
 
-fun generateSnake(height: Int, width: Int): Matrix<Int> {
+fun generateSnake(height: Int, width: Int): Matrix<Int>{
     val result = createMatrix(height, width, 0)
     var counter = 0
-    for (column in 0 until width) {
-        var row = 0
-        do {
+    for (column in 0 until width)
+        for (row in 0 until min(height, column + 1))
             result[row, column - row] = ++counter
-            row++
-        } while (row <= column && row < height)
-    }
-    for (row in 1 until height) {
-        var column = 0
-        do {
+    for (row in 1 until height)
+        for (column in 0 until min(width, height - row))
             result[row + column, width - 1 - column] = ++counter
-            column++
-        } while (row + column < height && column < width)
-    }
     return result
 }
 

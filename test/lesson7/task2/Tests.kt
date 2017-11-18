@@ -192,6 +192,9 @@ class Tests {
     @Tag("Hard")
     fun canOpenLock() {
         assertEquals(Triple(true, 0, 0), canOpenLock(
+                key = createMatrix(1, 1, listOf(listOf(0), listOf(0))),
+                lock = createMatrix(1, 1, listOf(listOf(1), listOf(1)))))
+        assertEquals(Triple(true, 0, 0), canOpenLock(
                 key = createMatrix(1, 1, listOf(listOf(1))),
                 lock = createMatrix(1, 1, listOf(listOf(0)))))
         assertEquals(Triple(true, 0, 1), canOpenLock(
