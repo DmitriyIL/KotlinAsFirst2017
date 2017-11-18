@@ -4,7 +4,7 @@ package lesson7.task2
 import lesson7.task1.Cell
 import lesson7.task1.Matrix
 import lesson7.task1.createMatrix
-import java.lang.Math.min
+import java.lang.Math.*
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -421,8 +421,30 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
  * 0  4 13  6
  * 3 10 11  8
  */
-fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> = TODO()
 
+fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
+    for (el in moves)
+        matrix.swap(el, 0) ?: throw IllegalStateException()
+    return matrix
+}
+
+fun Matrix<Int>.swap(a: Int, b: Int): Matrix<Int>?{
+    val square1 = find(a) ?: return null
+    val square2 = find(b) ?: return null
+    if (abs(square1.column - square2.column) > 1 || abs(square1.column - square2.column) > 1)
+        return null
+    val element = this[square1]
+    this[square1] = this[square2]
+    this[square2] = element
+    return this
+}
+
+fun Matrix<Int>.find(element: Int): Cell? {
+    for (row in 0 until height)
+        for (column in 0 until width)
+            if (element == this[row, column]) return Cell(row, column)
+    return null
+}
 /**
  * Очень сложная
  *
