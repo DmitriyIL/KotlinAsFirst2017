@@ -331,14 +331,19 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Вернуть тройку (Triple) -- (да/нет, требуемый сдвиг по высоте, требуемый сдвиг по ширине).
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
+fun main(args: Array<String>) {
+    println(canOpenLock(createMatrix(listOf(listOf(1), listOf(0), listOf(1))), createMatrix(listOf(listOf(1,1,1,0,0,1,1,0,1), listOf(1,0,1,0,0,1,1,1,0), listOf(1,0,0,1,0,0,1,1,0), listOf(1,0,1,1,0,1,0,0,0), listOf(0,0,1,0,1,1,1,0,1), listOf(1,0,0,0,0,1,0,0,0)))))
+}
+
+
 fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
     val invertKey = invertKey(key)
-    for (i in 0..lock.height - key.height) {
-        for (j in 0..lock.width - key.width) {
+    for (rowShift in 0..lock.height - key.height) {
+        for (columnShift in 0..lock.width - key.width) {
             val subMatrix = createSubMatrix(lock,
-                    Cell(i, j),
-                    Cell(key.height - 1 + i, key.width - 1 + j))
-            if (subMatrix == invertKey) return Triple(true, i, j)
+                    Cell(rowShift, columnShift),
+                    Cell(key.height - 1 + rowShift, key.width - 1 + columnShift))
+            if (subMatrix == invertKey) return Triple(true, rowShift, columnShift)
         }
     }
     return Triple(false, 0, 0)

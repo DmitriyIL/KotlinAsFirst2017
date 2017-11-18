@@ -42,6 +42,16 @@ interface Matrix<E> {
 fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> =
         if (height <= 0 || width <= 0) throw IllegalArgumentException()
         else MatrixImpl(width, height, e)
+
+fun <E> createMatrix(values: List<List<E>>): Matrix<E> {
+    val matrix = createMatrix(values.size, values[0].size, values[0][0])
+    for (row in 0 until values.size) {
+        for (column in 0 until values[0].size) {
+            matrix[row, column] = values[row][column]
+        }
+    }
+    return matrix
+}
 /**
  * Средняя сложность
  *
