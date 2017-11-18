@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson7.task2
 
+import lesson7.task1.Cell
 import lesson7.task1.Matrix
 import lesson7.task1.createMatrix
 import java.lang.Math.min
@@ -272,8 +273,8 @@ fun findHoles(matrix: Matrix<Int>): Holes {
     }
     for (column in 0 until matrix.width) {
         var sum = 0
-        for (i in 0 until matrix.height)
-            sum += matrix[i, column]
+        for (row in 0 until matrix.height)
+            sum += matrix[row, column]
         if (sum == 0) columns += column
     }
     return Holes(rows, columns)
@@ -330,8 +331,36 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Вернуть тройку (Triple) -- (да/нет, требуемый сдвиг по высоте, требуемый сдвиг по ширине).
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
-fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> = TODO()
+fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
+    val invertKey = invertKey(key)
+    for (i in 0..lock.height - key.height) {
+        for (j in 0..lock.width - key.width) {
+            val subMatrix = createSubMatrix(lock,
+                    Cell(i, j),
+                    Cell(key.height - 1 + i, key.width - 1 + j))
+            if (subMatrix == invertKey) return Triple(true, i, j)
+        }
+    }
+    return Triple(false, 0, 0)
+}
 
+fun invertKey(key: Matrix<Int>): Matrix<Int> {
+    for (i in 0 until key.height)
+        for (j in 0 until key.width)
+            key[i, j] = if (key[i, j] == 1) 0 else 1
+    return key
+}
+
+
+fun <E> createSubMatrix(matrix: Matrix<E>, start: Cell, end: Cell): Matrix<E> {
+    val result = createMatrix(end.row - start.row + 1,
+            end.column - start.column + 1,
+            matrix[0, 0])
+    for (row in 0 until result.height)
+        for (column in 0 until result.width)
+            result[row, column] = matrix[row + start.row, column + start.column]
+    return result
+}
 /**
  * Простая
  *
