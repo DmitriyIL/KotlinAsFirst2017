@@ -324,26 +324,42 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
 fun main(args: Array<String>) {
-    println(canOpenLock(key = createMatrix(listOf(listOf(0), listOf(0))),
-            lock = createMatrix(listOf(listOf(1), listOf(1)))))
+    println(canOpenLock(key = createMatrix(listOf(listOf(0))),
+            lock = createMatrix(listOf(listOf(1,1,1,1,1,1,1,1)))))
 }
 
 
 fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {
-    for (i in 0 until key.height)
-        for (j in 0 until key.width)
-            key[i, j] = if (key[i, j] == 1) 0 else 1
+    val invertKey = invertKey(key)
     for (rowShift in 0..lock.height - key.height) {
         for (columnShift in 0..lock.width - key.width) {
-            val subMatrix = createMatrix(key.height, key.width, 0)
-            for (row in 0 until subMatrix.height)
-                for (column in 0 until subMatrix.width)
-                    subMatrix[row, column] = lock[row + rowShift, column + columnShift]
-            if (subMatrix == key) return Triple(true, rowShift, columnShift)
+            val subMatrix = createSubMatrix(lock,
+                    Cell(rowShift, columnShift),
+                    Cell(key.height - 1 + rowShift, key.width - 1 + columnShift))
+            if (subMatrix == invertKey) return Triple(true, rowShift, columnShift)
         }
     }
     return Triple(false, 0, 0)
 }
+
+fun invertKey(key: Matrix<Int>): Matrix<Int> {
+    for (i in 0 until key.height)
+        for (j in 0 until key.width)
+            key[i, j] = if (key[i, j] == 1) 0 else 1
+    return key
+}
+
+
+fun <E> createSubMatrix(matrix: Matrix<E>, start: Cell, end: Cell): Matrix<E> {
+    val result = createMatrix(end.row - start.row + 1,
+            end.column - start.column + 1,
+            matrix[0, 0])
+    for (row in 0 until result.height)
+        for (column in 0 until result.width)
+            result[row, column] = matrix[row + start.row, column + start.column]
+    return result
+}
+
 
 /**
  * Простая
@@ -407,20 +423,19 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
  */
 
 fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
-    for (el in moves)
-        matrix.swap(el, 0) ?: throw IllegalStateException()
+    for (step in moves)
+        matrix.swap(step, 0)
     return matrix
 }
 
-fun Matrix<Int>.swap(a: Int, b: Int): Matrix<Int>?{
-    val square1 = find(a) ?: return null
-    val square2 = find(b) ?: return null
+fun Matrix<Int>.swap(a: Int, b: Int){
+    val square1 = find(a) ?: throw IllegalStateException()
+    val square2 = find(b) ?: throw IllegalStateException()
     if (abs(square1.column - square2.column) > 1 || abs(square1.column - square2.column) > 1)
-        return null
+        throw IllegalStateException()
     val element = this[square1]
     this[square1] = this[square2]
     this[square2] = element
-    return this
 }
 
 fun Matrix<Int>.find(element: Int): Cell? {
