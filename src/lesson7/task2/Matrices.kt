@@ -324,8 +324,17 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
 fun main(args: Array<String>) {
-    println(canOpenLock(key = createMatrix(listOf(listOf(0, 1))),
-            lock = createMatrix(listOf(listOf(0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0)))))
+    println(canOpenLock(key = createMatrix(listOf(listOf(0))),
+            lock = createMatrix(listOf(
+                    listOf(1),
+                    listOf(0),
+                    listOf(0),
+                    listOf(1),
+                    listOf(1),
+                    listOf(0),
+                    listOf(1),
+                    listOf(1)
+            ))))
 }
 
 

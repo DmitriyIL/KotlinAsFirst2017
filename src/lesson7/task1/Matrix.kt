@@ -74,13 +74,13 @@ class MatrixImpl<E>(override val width: Int, override val height: Int, e: E) : M
     }
 
     override fun equals(other: Any?) =
-            other is MatrixImpl<*> &&
+            other is Matrix<*> &&
             height == other.height &&
             width == other.width &&
             assertEquals(other)
 
     fun assertEquals (other: Any?): Boolean {
-        if (other is MatrixImpl<*>)
+        if (other is Matrix<*>)
         for (row in 0 until height)
             for (column in 0 until width)
                 if (this[row, column] != other[row, column]) return false
