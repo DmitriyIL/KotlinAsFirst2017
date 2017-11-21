@@ -39,6 +39,9 @@ data class Square(val column: Int, val row: Int) {
 
 }
 
+fun main(args: Array<String>) {
+    println(square("9_"))
+}
 /**
  * Простая
  *
@@ -48,8 +51,8 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square {
     if (notation.length != 2) throw IllegalArgumentException()
-    val square = Square(letters.indexOf(notation[0]), notation[1].toString().toInt())
-    if (square.inside()) return  square else throw IllegalArgumentException()
+    val square = Square(notation[0].toInt() - 96, notation[1].toInt() - 48)
+    if (square.inside()) return square else throw IllegalArgumentException()
 }
 
 /**
@@ -250,17 +253,17 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  */
 fun knightMoveGraph(): Graph {
     val g = Graph()
-    for (column in 'a'..'h')
+    for (column in 1..8)
         for (row in 1..8)
-            g.addVertex(column.toString() + row.toString())
+            g.addVertex(letters[column] + row.toString())
     for (column in 1..8)
         for (row in 1..8)
             for (columnStep in -2..2)
                 for (rowStep in -2..2) {
                     if (abs(columnStep) == abs(rowStep) || columnStep == 0 || rowStep == 0) continue
-                    if (Square(column + columnStep, rowStep + rowStep).inside())
-                        g.connect(Square(column, rowStep).notation(),
-                                Square(column + columnStep, rowStep + rowStep).notation())
+                    if (Square(column + columnStep, row + rowStep).inside())
+                        g.connect(Square(column, row).notation(),
+                                Square(column + columnStep, row + rowStep).notation())
                 }
     return g
 }
