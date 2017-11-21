@@ -324,8 +324,8 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
 fun main(args: Array<String>) {
-    println(canOpenLock(key = createMatrix(listOf(listOf(0))),
-            lock = createMatrix(listOf(listOf(1,1,1,1,1,1,1,1)))))
+    println(canOpenLock(key = createMatrix(listOf(listOf(0, 1))),
+            lock = createMatrix(listOf(listOf(0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0)))))
 }
 
 
@@ -431,7 +431,7 @@ fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
 fun Matrix<Int>.swap(a: Int, b: Int){
     val square1 = find(a) ?: throw IllegalStateException()
     val square2 = find(b) ?: throw IllegalStateException()
-    if (abs(square1.column - square2.column) > 1 || abs(square1.column - square2.column) > 1)
+    if (abs(square1.column - square2.column) + abs(square1.row - square2.row) != 1)
         throw IllegalStateException()
     val element = this[square1]
     this[square1] = this[square2]

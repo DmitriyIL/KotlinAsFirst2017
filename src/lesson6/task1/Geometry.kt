@@ -84,8 +84,7 @@ data class Circle(val center: Point, val radius: Double) {
      */
     fun distance(other: Circle): Double {
         val distance = center.distance(other.center) - radius - other.radius
-        return if (distance <= 0) 0.0
-        else distance
+        return if (distance <= 0) 0.0 else distance
     }
 
     /**
@@ -222,10 +221,9 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
     if (circles.size < 2) throw IllegalArgumentException()
     var min = Pair(circles[0], circles[1])
     for (i in 0 until circles.size)
-        for (j in i + 1 until circles.size) {
-        if (min.first.distance(min.second) > circles[i].distance(circles[j]))
-            min = Pair(circles[i], circles[j])
-    }
+        for (j in i + 1 until circles.size)
+            if (min.first.distance(min.second) > circles[i].distance(circles[j]))
+                min = Pair(circles[i], circles[j])
     return min
 }
 
@@ -239,8 +237,6 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val fuck = mutableListOf(1, 2, 3, 4)
-    fuck[3] = 2
     val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
     return Circle(center, center.distance(a))
 }

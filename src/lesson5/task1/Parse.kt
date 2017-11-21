@@ -72,15 +72,14 @@ private val months = arrayOf("января", "февраля", "марта", "а
 
 fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
-    if (parts.size != 3)
-        return ""
+    if (parts.size != 3) return ""
     try {
         val day = parts[0].toInt()
         val month = months.indexOf(parts[1]) + 1
         val year = parts[2].toInt()
         if (month == 0 || day <= 0 || year < 0) return ""
         return String.format("%02d.%02d.%d", day, month, year)
-    } catch (e : NumberFormatException) { return ""}
+    } catch (e: NumberFormatException) { return "" }
 }
 
 /**
@@ -94,10 +93,10 @@ fun dateDigitToStr(digital: String): String {
     val parts = try {
         digital.split(".").map { it.toInt() }
     } catch (e: NumberFormatException) { return "" }
-    if (parts.size != 3 || parts[2] < 0 || parts[0] <= 0 || parts[1] !in 1..12)
-        return ""
+    if (parts.size != 3 || parts[2] < 0 || parts[0] <= 0 || parts[1] !in 1..12) return ""
     return String.format("%d %s %d", parts[0], months[parts[1] - 1], parts[2])
 }
+
 /**
  * Средняя
  *
@@ -113,8 +112,7 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     val newPhone = phone.filter { it != '-' && it != ' ' && it != '(' && it != ')' }
     for (char in newPhone)
-        if (char !in '0'..'9' && char != '+' || char == '+' && newPhone.length < 2)
-            return ""
+        if (char !in '0'..'9' && char != '+' || char == '+' && newPhone.length < 2) return ""
     return newPhone
 }
 
@@ -165,15 +163,15 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     val parts = expression.split(" ")
-    try{
-    var result = parts[0].toInt()
-    for (i in 2 until parts.size step 2)
+    try {
+        var result = parts[0].toInt()
+        for (i in 2 until parts.size step 2)
             when (parts[i - 1]) {
                 "+" -> result += parts[i].toInt()
                 "-" -> result -= parts[i].toInt()
                 else -> throw IllegalArgumentException()
-            }
-    return result
+        }
+        return result
     } catch (e: NumberFormatException) { throw IllegalArgumentException() }
 }
 
@@ -189,12 +187,8 @@ fun plusMinus(expression: String): Int {
 fun firstDuplicateIndex(str: String): Int {
     val words = str.toLowerCase().split(" ")
     var index = 0
-    for (i in 0 until words.size - 1) {
-        if (words[i] == words[i + 1])
-            return index
-        else
-            index += words[i].length + 1
-    }
+    for (i in 0 until words.size - 1)
+        if (words[i] == words[i + 1]) return index else index += words[i].length + 1
     return -1
 }
 /**
@@ -294,13 +288,13 @@ fun fromRoman(roman: String): Int {
  */
 
 fun validate(commands: String) {
-    var AMT = 0
+    var bracketAMT = 0
     for (i in 0 until commands.length) {
-        if (commands[i] == '[') AMT++
-        else if (commands[i] == ']') AMT--
-        if (AMT < 0) throw IllegalArgumentException()
+        if (commands[i] == '[') bracketAMT++
+        else if (commands[i] == ']') bracketAMT--
+        if (bracketAMT < 0) throw IllegalArgumentException()
     }
-    if (AMT != 0) throw IllegalArgumentException()
+    if (bracketAMT != 0) throw IllegalArgumentException()
 }
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {

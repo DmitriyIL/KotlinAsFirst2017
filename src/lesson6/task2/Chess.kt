@@ -9,6 +9,8 @@ import java.lang.Math.*
  * Поэтому, обе координаты клетки (горизонталь row, вертикаль column) могут находиться в пределах от 1 до 8.
  * Горизонтали нумеруются снизу вверх, вертикали слева направо.
  */
+val letters = " abcdefgh"
+
 data class Square(val column: Int, val row: Int) {
 
     /**
@@ -25,14 +27,8 @@ data class Square(val column: Int, val row: Int) {
      * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
      * Для клетки не в пределах доски вернуть пустую строку
      */
-    val letters = " abcdefgh"
 
-    val color = if (abs(row - column) % 2 == 0) "Black"
-    else "White"
-
-    fun notation(): String = if (this.inside())
-        letters[column] + "$row"
-    else ""
+    fun notation(): String = if (this.inside()) letters[column] + "$row" else ""
 
     override fun equals(other: Any?): Boolean =
             other is Square && row == other.row && column == other.column
@@ -52,9 +48,8 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square {
     if (notation.length != 2) throw IllegalArgumentException()
-    val square = Square(notation[0].toInt() - 96, notation[1].toInt() - 48)
-    if (square.inside()) return  square
-    else throw IllegalArgumentException()
+    val square = Square(letters.indexOf(notation[0]), notation[1].toString().toInt())
+    if (square.inside()) return  square else throw IllegalArgumentException()
 }
 
 /**
@@ -138,9 +133,9 @@ fun rookTrajectory(start: Square, end: Square): List<Square> {
 
 fun bishopMoveNumber(start: Square, end: Square): Int =
         if (!start.inside() || !end.inside()) throw IllegalArgumentException()
-        else if (start.color != end.color) -1
+        else if ((abs(start.row - start.column) % 2 == 0) != (abs(end.row - end.column) % 2 == 0)) -1
         else if (start == end) 0
-        else if  (abs(start.row - end.row) == abs(start.column - end.column)) 1
+        else if (abs(start.row - end.row) == abs(start.column - end.column)) 1
         else 2
 
 
@@ -163,7 +158,7 @@ fun bishopMoveNumber(start: Square, end: Square): Int =
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun bishopTrajectory(start: Square, end: Square): List<Square> {
-    when (bishopMoveNumber(start, end)){
+    when (bishopMoveNumber(start, end)) {
         -1 -> return listOf()
         0 -> return listOf(start)
         1 -> return listOf(start, end)
@@ -196,8 +191,7 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
  * Король может последовательно пройти через клетки (4, 2) и (5, 2) к клетке (6, 3).
  */
 fun kingMoveNumber(start: Square, end: Square): Int {
-    if (!start.inside() || !end.inside())
-        throw  IllegalArgumentException()
+    if (!start.inside() || !end.inside()) throw  IllegalArgumentException()
     return max(abs(end.column - start.column), abs(end.row - start.row))
 }
 
@@ -217,15 +211,15 @@ fun kingMoveNumber(start: Square, end: Square): Int {
  */
 fun kingTrajectory(start: Square, end: Square): List<Square> {
     val points = mutableListOf(start)
-    var columnSign = if (end.column > start.column) 1 else -1
-    var rowSign = if (end.row > start.row) 1 else -1
-    while (end.row != points.last().row && end.column != points.last().column){
-        points.add(Square(points.last().column + columnSign, points.last().row + rowSign))
+    var columnStep = if (end.column > start.column) 1 else -1
+    var rowStep = if (end.row > start.row) 1 else -1
+    while (end.row != points.last().row && end.column != points.last().column) {
+        points.add(Square(points.last().column + columnStep, points.last().row + rowStep))
     }
-    if (end.column == points.last().column) columnSign = 0
-    else rowSign = 0
-    while (points.last() != end){
-        points.add(Square(points.last().column + columnSign, points.last().row + rowSign))
+    if (end.row == points.last().row) rowStep = 0
+    else columnStep = 0
+    while (points.last() != end) {
+        points.add(Square(points.last().column + columnStep, points.last().row + rowStep))
     }
     return points
 }
@@ -260,11 +254,12 @@ fun knightMoveGraph(): Graph {
             g.addVertex(Square(column, row).notation())
     for (column in 1..8)
         for (row in 1..8)
-            for (i in -2..2)
-                for (j in -2..2) {
-                    if (abs(i) == abs(j) || i == 0 || j == 0) continue
-                    if (Square(column + i, row + j).inside())
-                        g.connect(Square(column, row).notation(), Square(column + i, row + j).notation())
+            for (columnStep in -2..2)
+                for (rowStep in -2..2) {
+                    if (abs(columnStep) == abs(rowStep) || columnStep == 0 || rowStep == 0) continue
+                    if (Square(column + columnStep, rowStep + rowStep).inside())
+                        g.connect(Square(column, rowStep).notation(),
+                                Square(column + columnStep, rowStep + rowStep).notation())
                 }
     return g
 }
