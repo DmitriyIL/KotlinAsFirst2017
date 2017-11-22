@@ -323,19 +323,6 @@ fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> {
  * Вернуть тройку (Triple) -- (да/нет, требуемый сдвиг по высоте, требуемый сдвиг по ширине).
  * Если наложение невозможно, то первый элемент тройки "нет" и сдвиги могут быть любыми.
  */
-fun main(args: Array<String>) {
-    println(canOpenLock(key = createMatrix(listOf(listOf(0))),
-            lock = createMatrix(listOf(
-                    listOf(1),
-                    listOf(0),
-                    listOf(0),
-                    listOf(1),
-                    listOf(1),
-                    listOf(0),
-                    listOf(1),
-                    listOf(1)
-            ))))
-}
 
 
 fun canOpenLock(key: Matrix<Int>, lock: Matrix<Int>): Triple<Boolean, Int, Int> {

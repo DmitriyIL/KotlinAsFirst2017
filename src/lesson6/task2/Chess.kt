@@ -50,8 +50,8 @@ fun main(args: Array<String>) {
  * Если нотация некорректна, бросить IllegalArgumentException
  */
 fun square(notation: String): Square {
-    if (notation.length != 2) throw IllegalArgumentException()
-    val square = Square(notation[0].toInt() - 96, notation[1].toInt() - 48)
+    if (notation.length != 2 && notation[1] !in '0'..'9') throw IllegalArgumentException()
+    val square = Square(letters.indexOf(notation[0]), notation[1].toString().toInt())
     if (square.inside()) return square else throw IllegalArgumentException()
 }
 

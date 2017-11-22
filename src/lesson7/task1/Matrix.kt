@@ -88,12 +88,13 @@ class MatrixImpl<E>(override val width: Int, override val height: Int, e: E) : M
     }
 
     override fun toString(): String {
-        var str = ""
+        val str = StringBuilder("")
         for (i in 0 until height) {
-            if (i != 0) str += "\n"
-            for (j in 0 until width) str += this[i, j].toString() + " "
+            if (i != 0) str.append("\n")
+            for (j in 0 until width) str.append(this[i, j].toString(), ' ')
         }
-        return str
+        return str.toString()
+
     }
 
     override fun hashCode(): Int {

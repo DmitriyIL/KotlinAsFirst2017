@@ -54,6 +54,12 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    for (line in File(inputName).readLines()) {
+        for (string in substrings) {
+            if (line.toLowerCase() in substrings)
+                TODO()
+        }
+    }
     TODO()
 }
 
