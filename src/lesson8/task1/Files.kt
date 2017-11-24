@@ -54,15 +54,14 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
-    for (line in File(inputName).readLines()) {
-        for (string in substrings) {
-            if (line.toLowerCase() in substrings)
-                TODO()
-        }
+    val substringAMT = mutableMapOf<String, Int>()
+    for (substring in substrings) {
+        val inputText = File(inputName).readText().toLowerCase()
+        val substringRegex = substring.toLowerCase().toRegex()
+        substringAMT[substring] = substringRegex.findAll(inputText).count()
     }
-    TODO()
+    return substringAMT
 }
-
 
 /**
  * Средняя
@@ -78,6 +77,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
+    val regex = Regex("""[жЖ][ыЫ]|[чЧшШщЩ][яЯюЮ]""")
     TODO()
 }
 
