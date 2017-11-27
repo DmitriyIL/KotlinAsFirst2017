@@ -77,9 +77,23 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    val regex = Regex("""[жЖ][ыЫ]|[чЧшШщЩ][яЯюЮ]""")
-    TODO()
+    val prefix = "ЖжЧчШшЩщ"
+    val correction = mapOf('ы' to "и", 'Ы' to "И", 'я' to "а", 'Я' to "А", 'ю' to "у", 'Ю' to "У")
+    val output = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()){
+        output.write(line[0].toString())
+        for (char in 1 until line.length){
+            if (line[char - 1] in prefix) {
+                output.write(correction[line[char]] ?: line[char].toString())
+                continue
+            }
+            output.write(line[char].toString())
+        }
+        output.newLine()
+    }
+    output.close()
 }
+
 
 /**
  * Средняя
@@ -99,8 +113,20 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val output = File(outputName).bufferedWriter()
+    val lines = File(inputName).readLines().map { it.trim() }
+    var mostLength = 0
+    for (line in lines)
+        if (line.length > mostLength) mostLength = line.length
+    for (line in lines) {
+        val spaces = (mostLength - line.length) / 2
+        val indent = List(spaces) { " " }.joinToString("") // спросить можно ли короче
+        output.write(indent + line)
+        output.newLine()
+    }
+    output.close()
 }
+
 
 /**
  * Сложная
@@ -130,7 +156,35 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val output = File(outputName).bufferedWriter()
+    val separatedLines = mutableListOf<MutableList<String>>()
+    for (line in File(inputName).readLines())
+        separatedLines.add(line.split(Regex("""\s+"""))
+                               .filter { it != "" }
+                               .toMutableList())
+    var mostLength = 0
+    for (i in 0 until separatedLines.size) {
+        val length = separatedLines[i].fold(separatedLines[i].size - 1) {
+            previous, it -> previous + it.length
+        }
+        if (length > mostLength) mostLength = length
+    }
+    for (wordList in separatedLines) {
+        if (wordList.size <= 1) {
+            output.write(wordList.joinToString())
+            output.newLine()
+            continue
+        }
+        val length = wordList.fold(0) { previous, it -> previous + it.length }
+        val missingSpaces = (mostLength - length) % (wordList.size - 1)
+        for (i in 0 until missingSpaces) wordList[i] += " "
+        val spaces = (mostLength - length) / (wordList.size - 1)
+        val separator = List(spaces) { " " }.joinToString("")
+        val line = wordList.joinToString(separator = separator)
+        output.write(line)
+        output.newLine()
+    }
+    output.close()
 }
 
 /**
@@ -147,7 +201,28 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    val text = File(inputName).readText().toLowerCase()
+    val wordInTheText = mutableMapOf<String, Int>()
+    val top20 = MutableList(20) {Pair("", 0)}
+    val words = Regex("""([а-я]+)|([a-z]+)""").findAll(text)
+    for (word in words) {
+        val strWord = word.value
+        val wordsAMT = wordInTheText[strWord] ?: 0
+        wordInTheText[strWord] = 1 + wordsAMT
+        if (wordsAMT + 1 > top20.last().second) {
+            var placeInTop20 = 19
+            while (placeInTop20 > 0 && wordsAMT + 1 > top20[placeInTop20 - 1].second) {
+                placeInTop20--
+                if (top20[placeInTop20].first == strWord)
+                    top20.removeAt(placeInTop20)
+            }
+            top20.add(placeInTop20, Pair(strWord, wordsAMT + 1))
+            if (top20.size > 20) top20.removeAt(20)
+        }
+    }
+    return top20.toMap()
+}
 
 /**
  * Средняя
