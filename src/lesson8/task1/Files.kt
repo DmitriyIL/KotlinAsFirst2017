@@ -205,7 +205,7 @@ fun top20Words(inputName: String): Map<String, Int> {
     val text = File(inputName).readText().toLowerCase()
     val wordInTheText = mutableMapOf<String, Int>()
     val top20 = MutableList(20) {Pair("", 0)}
-    val words = Regex("""([а-я]+)|([a-z]+)""").findAll(text)
+    val words = Regex("""([а-я|ё]+)|([a-z]+)""").findAll(text)
     for (word in words) {
         val strWord = word.value
         val wordsAMT = wordInTheText[strWord] ?: 0
