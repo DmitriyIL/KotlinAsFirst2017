@@ -221,7 +221,7 @@ fun top20Words(inputName: String): Map<String, Int> {
             if (top20.size > 20) top20.removeAt(20)
         }
     }
-    return top20.toMap()
+    return top20.filter { it.second != 0 }.toMap()
 }
 
 /**
