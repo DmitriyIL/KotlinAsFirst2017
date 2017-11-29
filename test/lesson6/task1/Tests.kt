@@ -1,5 +1,7 @@
 package lesson6.task1
 
+import lesson7.task2.fifteenGameMoves
+import lesson8.task1.top20Words
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -45,9 +47,7 @@ class Tests {
         assertEquals(third, first)
     }
 
-    private fun approxEquals(expected: Line, actual: Line, delta: Double): Boolean =
-            Math.abs(expected.angle - actual.angle) <= delta &&
-            Math.abs(expected.b - actual.b) <= delta
+    private fun approxEquals(expected: Line, actual: Line, delta: Double): Boolean = Math.abs(expected.angle - actual.angle) <= delta && Math.abs(expected.b - actual.b) <= delta
 
     private fun assertApproxEquals(expected: Line, actual: Line, delta: Double = Math.ulp(10.0)) {
         assertTrue(approxEquals(expected, actual, delta))
@@ -202,7 +202,7 @@ class Tests {
         val result = circleByThreePoints(Point(5.0, 0.0), Point(3.0, 4.0), Point(0.0, -5.0))
         assertTrue(result.center.distance(Point(0.0, 0.0)) < 1e-5)
         assertEquals(5.0, result.radius, 1e-5)
-        val result1 = circleByThreePoints(Point(-999.1008583476022, -1000.0), Point(-632.0,-632.0), Point(-999.0954203876826, -632.0))
+        val result1 = circleByThreePoints(Point(-999.1008583476022, -1000.0), Point(-632.0, -632.0), Point(-999.0954203876826, -632.0))
         assertTrue(result1.center.distance(Point(-815.5477101938412, -816.0027123366227)) < 1e-5)
         assertEquals(259.897595342158, result1.radius, 1e-5)
     }
@@ -220,14 +220,14 @@ class Tests {
         assertEquals(4.0, result.radius, 0.02)
         for (p in listOf(p1, p2, p3, p4, p5, p6)) {
             assertTrue(result.contains(p))
-            }
+        }
 
         val p1e = Point(-632.0, -999.1974327615777)
-        val p2e= Point(-999.2136250294625,-999.3587496316869)
+        val p2e = Point(-999.2136250294625, -999.3587496316869)
         val p3e = Point(-632.0, -999.2317120032715)
         val p4e = Point(-1000.0, -999.6417959714103)
         val p5e = Point(-999.3904985733098, -999.0089536214418)
-        val p6e = Point(-632.0,-999.630038194856)
+        val p6e = Point(-632.0, -999.630038194856)
         val p7e = Point(-999.3869497252677, -999.4027379763162)
         val p8e = Point(-999.8937111910498, -999.5283762256345)
         val p9e = Point(-999.8600368832643, -999.7201277466286)

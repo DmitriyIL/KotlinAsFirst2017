@@ -191,20 +191,22 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean {
     if (matrix.height != matrix.width) throw IllegalArgumentException()
     val rotateMatrix = rotate(matrix)
     val size = matrix.height
-        for (row in 0 until size) {
-            val visited = mutableListOf<Int>()
-            val rotateVisited = mutableListOf<Int>()
-            for (column in 0 until size) {
-                val value = matrix[row, column]
-                if (value !in visited && value in 1..size)
-                    visited.add(matrix[row, column])
-                else return false
-                val rotateValue = rotateMatrix[row, column]
-                if (rotateValue !in rotateVisited && rotateValue in 1..size)
-                    rotateVisited.add(rotateMatrix[row, column])
-                else return false
-            }
+    for (row in 0 until size) {
+        val visited = mutableListOf<Int>()
+        val rotateVisited = mutableListOf<Int>()
+        for (column in 0 until size) {
+            val value = matrix[row, column]
+            if (value !in visited && value in 1..size)
+                visited.add(matrix[row, column])
+            else
+                return false
+            val rotateValue = rotateMatrix[row, column]
+            if (rotateValue !in rotateVisited && rotateValue in 1..size)
+                rotateVisited.add(rotateMatrix[row, column])
+            else
+                return false
         }
+    }
     return true
 }
 
@@ -236,7 +238,7 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
                 for (b in -1..1)
                     if ((a != 0 || b != 0) && row + a in 0 until height && column + b in 0 until width)
                         result[row + a, column + b] += matrix[row, column]
-return result
+    return result
 }
 
 /**
@@ -345,7 +347,6 @@ fun invertKey(key: Matrix<Int>): Matrix<Int> {
     return key
 }
 
-
 fun <E> createSubMatrix(matrix: Matrix<E>, start: Cell, end: Cell): Matrix<E> {
     val result = createMatrix(end.row - start.row + 1,
             end.column - start.column + 1,
@@ -390,7 +391,8 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
     }
     return result
 }
-    /**
+
+/**
  * Сложная
  *
  * В матрице matrix размером 4х4 дана исходная позиция для игры в 15, например

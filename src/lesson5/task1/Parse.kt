@@ -288,13 +288,13 @@ fun fromRoman(roman: String): Int {
  */
 
 fun validate(commands: String) {
-    var bracketAMT = 0
+    var brackets = 0
     for (i in 0 until commands.length) {
-        if (commands[i] == '[') bracketAMT++
-        else if (commands[i] == ']') bracketAMT--
-        if (bracketAMT < 0) throw IllegalArgumentException()
+        if (commands[i] == '[') brackets++
+        else if (commands[i] == ']') brackets--
+        if (brackets < 0) throw IllegalArgumentException()
     }
-    if (bracketAMT != 0) throw IllegalArgumentException()
+    if (brackets != 0) throw IllegalArgumentException()
 }
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {

@@ -50,9 +50,9 @@ fun main(args: Array<String>) {
  * Если нотация некорректна, бросить IllegalArgumentException
  */
 fun square(notation: String): Square {
-    if (notation.length != 2 && notation[1] !in '0'..'9') throw IllegalArgumentException()
-    val square = Square(letters.indexOf(notation[0]), notation[1].toString().toInt())
-    if (square.inside()) return square else throw IllegalArgumentException()
+    if (notation.length != 2 || notation[1] !in '1'..'8' || notation[0] !in 'a'..'h')
+        throw IllegalArgumentException()
+    return Square(letters.indexOf(notation[0]), notation[1].toString().toInt())
 }
 
 /**
@@ -105,7 +105,8 @@ fun rookTrajectory(start: Square, end: Square): List<Square> {
     while (square != end) {
         if (square.column != end.column)
             square = Square(end.column, square.row)
-        else square = Square(square.column, end.row)
+        else
+            square = Square(square.column, end.row)
         squares += square
     }
     return squares
@@ -137,7 +138,7 @@ fun rookTrajectory(start: Square, end: Square): List<Square> {
 
 fun bishopMoveNumber(start: Square, end: Square): Int = when {
     !start.inside() || !end.inside() -> throw IllegalArgumentException()
-    (abs(start.row - start.column) % 2 == 0) != (abs(end.row - end.column) % 2 == 0) -> -1
+    (abs(start.row - start.column) % 2 != abs(end.row - end.column) % 2) -> -1
     start == end -> 0
     abs(start.row - end.row) == abs(start.column - end.column) -> 1
     else -> 2
@@ -253,17 +254,18 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  */
 fun knightMoveGraph(): Graph {
     val g = Graph()
-    for (column in 1..8)
-        for (row in 1..8)
-            g.addVertex(letters[column] + row.toString())
-    for (column in 1..8)
-        for (row in 1..8)
+    val squares = List(8) { column -> List(8) { row -> letters[column + 1] + (row + 1).toString() } }
+    for (listOfSquares in squares)
+        for (square in listOfSquares)
+            g.addVertex(square)
+    for (column in 0 until 8)
+        for (row in 0 until 8)
             for (columnStep in -2..2)
                 for (rowStep in -2..2) {
                     if (abs(columnStep) == abs(rowStep) || columnStep == 0 || rowStep == 0) continue
-                    if (Square(column + columnStep, row + rowStep).inside())
-                        g.connect(Square(column, row).notation(),
-                                Square(column + columnStep, row + rowStep).notation())
+                    if (column + columnStep in 0..7 && row + rowStep in 0..7)
+                        g.connect(squares[column][row],
+                                squares[column + columnStep][row + rowStep])
                 }
     return g
 }

@@ -55,8 +55,8 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val substringAMT = mutableMapOf<String, Int>()
+    val inputText = File(inputName).readText().toLowerCase()
     for (substring in substrings) {
-        val inputText = File(inputName).readText().toLowerCase()
         val substringRegex = substring.toLowerCase().toRegex()
         substringAMT[substring] = substringRegex.findAll(inputText).count()
     }
@@ -79,19 +79,19 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 fun sibilants(inputName: String, outputName: String) {
     val prefix = "ЖжЧчШшЩщ"
     val correction = mapOf('ы' to "и", 'Ы' to "И", 'я' to "а", 'Я' to "А", 'ю' to "у", 'Ю' to "У")
-    val output = File(outputName).bufferedWriter()
-    for (line in File(inputName).readLines()){
-        output.write(line[0].toString())
-        for (char in 1 until line.length){
-            if (line[char - 1] in prefix) {
-                output.write(correction[line[char]] ?: line[char].toString())
-                continue
+    File(outputName).bufferedWriter().use {
+        for (line in File(inputName).readLines()) {
+            it.write(line[0].toString())
+            for (char in 1 until line.length) {
+                if (line[char - 1] in prefix) {
+                    it.write(correction[line[char]] ?: line[char].toString())
+                    continue
+                }
+                it.write(line[char].toString())
             }
-            output.write(line[char].toString())
+            it.newLine()
         }
-        output.newLine()
     }
-    output.close()
 }
 
 
@@ -113,20 +113,19 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    val output = File(outputName).bufferedWriter()
     val lines = File(inputName).readLines().map { it.trim() }
     var mostLength = 0
-    for (line in lines)
-        if (line.length > mostLength) mostLength = line.length
-    for (line in lines) {
-        val spaces = (mostLength - line.length) / 2
-        val indent = List(spaces) { " " }.joinToString("") // спросить можно ли короче
-        output.write(indent + line)
-        output.newLine()
+    for (line in lines) if (line.length > mostLength) mostLength = line.length
+    File(outputName).bufferedWriter().use {
+        for (line in lines) {
+            val spaces = (mostLength - line.length) / 2
+            val indent = List(spaces) { " " }.joinToString("")
+            it.write(indent + line)
+            it.newLine()
+        }
+        it.close()
     }
-    output.close()
 }
-
 
 /**
  * Сложная
@@ -156,37 +155,43 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    val output = File(outputName).bufferedWriter()
-    val separatedLines = mutableListOf<MutableList<String>>()
+    val listsOfWords = mutableListOf<MutableList<String>>()
     for (line in File(inputName).readLines())
-        separatedLines.add(line.split(Regex("""\s+"""))
-                               .filter { it != "" }
-                               .toMutableList())
+        listsOfWords.add(line.split(Regex("""\s+""")).filter { it != "" }.toMutableList())
+    val mostLength = findMostLength(listsOfWords)
+    File(outputName).bufferedWriter().use {
+        for (wordList in listsOfWords) {
+            if (wordList.size <= 1) {
+                it.write(wordList.joinToString())
+                it.newLine()
+                continue
+            }
+            it.write(alignLine(wordList, mostLength))
+            it.newLine()
+        }
+    }
+}
+
+fun findMostLength(listsOfWords: MutableList<MutableList<String>>): Int {
     var mostLength = 0
-    for (i in 0 until separatedLines.size) {
-        val length = separatedLines[i].fold(separatedLines[i].size - 1) {
+    for (i in 0 until listsOfWords.size) {
+        val length = listsOfWords[i].fold(listsOfWords[i].size - 1) {
             previous, it -> previous + it.length
         }
         if (length > mostLength) mostLength = length
     }
-    for (wordList in separatedLines) {
-        if (wordList.size <= 1) {
-            output.write(wordList.joinToString())
-            output.newLine()
-            continue
-        }
-        val length = wordList.fold(0) { previous, it -> previous + it.length }
-        val missingSpaces = (mostLength - length) % (wordList.size - 1)
-        for (i in 0 until missingSpaces) wordList[i] += " "
-        val spaces = (mostLength - length) / (wordList.size - 1)
-        val separator = List(spaces) { " " }.joinToString("")
-        val line = wordList.joinToString(separator = separator)
-        output.write(line)
-        output.newLine()
-    }
-    output.close()
+    return mostLength
 }
 
+fun alignLine(wordList: MutableList<String>, mostLength: Int): String {
+    val length = wordList.fold(0) { previous, it -> previous + it.length }
+    val missingSpaces = (mostLength - length) % (wordList.size - 1)
+    for (i in 0 until missingSpaces)
+        wordList[i] += " "
+    val numberOfSpaces = (mostLength - length) / (wordList.size - 1)
+    val separator = List(numberOfSpaces) { " " }.joinToString("")
+    return wordList.joinToString(separator = separator)
+}
 /**
  * Средняя
  *
@@ -203,25 +208,22 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  */
 fun top20Words(inputName: String): Map<String, Int> {
     val text = File(inputName).readText().toLowerCase()
-    val wordInTheText = mutableMapOf<String, Int>()
-    val top20 = MutableList(20) {Pair("", 0)}
+    val wordsFrequency = mutableMapOf<String, Int>()
     val words = Regex("""([а-я|ё]+)|([a-z]+)""").findAll(text)
     for (word in words) {
         val strWord = word.value
-        val wordsAMT = wordInTheText[strWord] ?: 0
-        wordInTheText[strWord] = 1 + wordsAMT
-        if (wordsAMT + 1 > top20.last().second) {
-            var placeInTop20 = 19
-            while (placeInTop20 > 0 && wordsAMT + 1 > top20[placeInTop20 - 1].second) {
-                placeInTop20--
-                if (top20[placeInTop20].first == strWord)
-                    top20.removeAt(placeInTop20)
-            }
-            top20.add(placeInTop20, Pair(strWord, wordsAMT + 1))
-            if (top20.size > 20) top20.removeAt(20)
+        val wordsAMT = wordsFrequency[strWord] ?: 0
+        wordsFrequency[strWord] = 1 + wordsAMT
+    }
+    var top20 = wordsFrequency
+    if (wordsFrequency.size > 20) {
+        top20 = mutableMapOf()
+        val top20Values = wordsFrequency.values.sortedDescending().subList(0, 19)
+        for ((key, value) in wordsFrequency) {
+            if (value in top20Values) top20.put(key, value)
         }
     }
-    return top20.filter { it.second != 0 }.toMap()
+    return top20.toMap()
 }
 
 /**

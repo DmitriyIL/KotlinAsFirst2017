@@ -4,6 +4,7 @@ package lesson6.task1
 import lesson1.task1.angleInRadian
 import lesson1.task1.sqr
 import lesson2.task2.pointInsideCircle
+import java.io.File
 import java.lang.Math.*
 
 /**
