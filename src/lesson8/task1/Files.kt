@@ -118,8 +118,8 @@ fun centerFile(inputName: String, outputName: String) {
     for (line in lines) if (line.length > mostLength) mostLength = line.length
     File(outputName).bufferedWriter().use {
         for (line in lines) {
-            val spaces = (mostLength - line.length) / 2
-            val indent = List(spaces) { " " }.joinToString("")
+            val amtOfSpaces = (mostLength - line.length) / 2
+            val indent = " ".repeat(amtOfSpaces)
             it.write(indent + line)
             it.newLine()
         }
@@ -188,8 +188,8 @@ fun alignLine(wordList: MutableList<String>, mostLength: Int): String {
     val missingSpaces = (mostLength - length) % (wordList.size - 1)
     for (i in 0 until missingSpaces)
         wordList[i] += " "
-    val numberOfSpaces = (mostLength - length) / (wordList.size - 1)
-    val separator = List(numberOfSpaces) { " " }.joinToString("")
+    val amtOfSpaces = (mostLength - length) / (wordList.size - 1)
+    val separator = " ".repeat(amtOfSpaces)
     return wordList.joinToString(separator = separator)
 }
 /**
@@ -221,6 +221,7 @@ fun top20Words(inputName: String): Map<String, Int> {
         val top20Values = wordsFrequency.values.sortedDescending().subList(0, 19)
         for ((key, value) in wordsFrequency) {
             if (value in top20Values) top20.put(key, value)
+            if (top20.size == 20) break
         }
     }
     return top20.toMap()
@@ -253,8 +254,24 @@ fun top20Words(inputName: String): Map<String, Int> {
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    val inputText = File(inputName).readText()
+    val outputFile = File(outputName).bufferedWriter()
+    for (char in inputText) {
+        var strForOutput = char.toString()
+        for ((key, value) in dictionary)
+            if (char.toLowerCase() == key.toLowerCase()) {
+            strForOutput = value.toLowerCase()
+            if (char.isUpperCase())
+                strForOutput = strForOutput.toUpperCaseFirst()
+            break
+        }
+        outputFile.write(strForOutput)
+    }
+    outputFile.close()
 }
+
+fun String.toUpperCaseFirst(): String =
+        if (this.isEmpty()) "" else this.first().toUpperCase() + this.substring(1)
 
 /**
  * Средняя
