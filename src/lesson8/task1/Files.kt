@@ -228,13 +228,13 @@ fun top20Words(inputName: String): Map<String, Int> {
 }
 
 fun Map<String, Int>.sortValues(): MutableMap<String, Int> {
-    val orderMap = mutableMapOf<String, Int>()
+    val sortedMap = mutableMapOf<String, Int>()
     val topValues = this.values.sortedDescending()
     for (topValue in topValues)
         for ((key, value) in this)
             if (value == topValue)
-                orderMap.put(key, value)
-    return orderMap
+                sortedMap.put(key, value)
+    return sortedMap
 }
 /**
  * Средняя
