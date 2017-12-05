@@ -224,9 +224,18 @@ fun top20Words(inputName: String): Map<String, Int> {
             if (top20.size == 20) break
         }
     }
-    return top20.toMap()
+    return top20.toMap().sortValues()
 }
 
+fun Map<String, Int>.sortValues(): MutableMap<String, Int> {
+    val orderMap = mutableMapOf<String, Int>()
+    val topValues = this.values.sortedDescending()
+    for (topValue in topValues)
+        for ((key, value) in this)
+            if (value == topValue)
+                orderMap.put(key, value)
+    return orderMap
+}
 /**
  * Средняя
  *
