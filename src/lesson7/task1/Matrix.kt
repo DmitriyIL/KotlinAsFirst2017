@@ -73,10 +73,7 @@ class MatrixImpl<E>(override val width: Int, override val height: Int, e: E) : M
         matrix[cell.row][cell.column] = value
     }
 
-    override fun equals(other: Any?) =
-            matrixEquals(other)
-
-    fun matrixEquals (other: Any?): Boolean {
+    override fun equals(other: Any?): Boolean {
         if (other is Matrix<*> && height == other.height && width == other.width)
         for (row in 0 until height)
             for (column in 0 until width)

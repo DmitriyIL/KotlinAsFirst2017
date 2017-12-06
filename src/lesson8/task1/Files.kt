@@ -220,20 +220,21 @@ fun top20Words(inputName: String): Map<String, Int> {
         top20 = mutableMapOf()
         val top20Values = wordsFrequency.values.sortedDescending().subList(0, 20)
         for ((key, value) in wordsFrequency) {
-            if (value in top20Values) top20.put(key, value)
-            if (top20.size == 20) break
+            if (value in top20Values[19]..top20Values[0]) top20.put(key, value)
         }
     }
-    return top20.toMap().sortValues()
+    return top20.toMap().sortValues(20)
 }
 
-fun Map<String, Int>.sortValues(): MutableMap<String, Int> {
+fun Map<String, Int>.sortValues(n: Int): MutableMap<String, Int> {
     val sortedMap = mutableMapOf<String, Int>()
     val topValues = this.values.sortedDescending()
-    for (topValue in topValues)
+    for (topValue in topValues) {
+        if (sortedMap.size == 20) break
         for ((key, value) in this)
             if (value == topValue)
                 sortedMap.put(key, value)
+    }
     return sortedMap
 }
 /**
