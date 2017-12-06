@@ -218,7 +218,7 @@ fun top20Words(inputName: String): Map<String, Int> {
     var top20 = wordsFrequency
     if (wordsFrequency.size > 20) {
         top20 = mutableMapOf()
-        val top20Values = wordsFrequency.values.sortedDescending().subList(0, 19)
+        val top20Values = wordsFrequency.values.sortedDescending().subList(0, 20)
         for ((key, value) in wordsFrequency) {
             if (value in top20Values) top20.put(key, value)
             if (top20.size == 20) break
@@ -269,7 +269,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
         var strForOutput = char.toString()
         for ((key, value) in dictionary)
             if (char.toLowerCase() == key.toLowerCase()) {
-            strForOutput = value.toLowerCase()
+            strForOutput = value
             if (char.isUpperCase())
                 strForOutput = strForOutput.toUpperCaseFirst()
             break
