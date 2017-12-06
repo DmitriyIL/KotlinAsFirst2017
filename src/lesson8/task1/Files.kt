@@ -54,13 +54,20 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
-    val substringAMT = mutableMapOf<String, Int>()
+    val substringsAmt = mutableMapOf<String, Int>()
     val inputText = File(inputName).readText().toLowerCase()
     for (substring in substrings) {
-        val substringRegex = substring.toLowerCase().toRegex()
-        substringAMT[substring] = substringRegex.findAll(inputText).count()
+        var substringAMT = 0
+        for (char in 0 until inputText.length - substring.length) {
+            if (inputText[char].toLowerCase() == substring[0].toLowerCase()) {
+                val cutOutStr = inputText.substring(char, char + substring.length)
+                if (cutOutStr.toLowerCase() == substring.toLowerCase())
+                    substringAMT++
+            }
+            substringsAmt[substring] = substringAMT
+        }
     }
-    return substringAMT
+    return substringsAmt
 }
 
 /**
@@ -230,10 +237,11 @@ fun Map<String, Int>.sortValues(n: Int): MutableMap<String, Int> {
     val sortedMap = mutableMapOf<String, Int>()
     val topValues = this.values.sortedDescending()
     for (topValue in topValues) {
-        if (sortedMap.size == 20) break
         for ((key, value) in this)
-            if (value == topValue)
+            if (value == topValue) {
+                if (sortedMap.size == 20) break
                 sortedMap.put(key, value)
+        }
     }
     return sortedMap
 }
@@ -268,6 +276,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     val outputFile = File(outputName).bufferedWriter()
     for (char in inputText) {
         var strForOutput = dictionary[char.toUpperCase()] ?: dictionary[char.toLowerCase()] ?: char.toString()
+        strForOutput = strForOutput.toLowerCase()
         if (char.isUpperCase())
             strForOutput = strForOutput.toUpperCaseFirst()
         outputFile.write(strForOutput)
