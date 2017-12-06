@@ -277,7 +277,6 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     for (char in inputText) {
         var strForOutput = dictionary[char.toUpperCase()] ?: dictionary[char.toLowerCase()] ?: char.toString()
         if (char.isUpperCase()) strForOutput = strForOutput.toUpperCaseFirst()
-        else strForOutput = strForOutput.toLowerCase()
         outputFile.write(strForOutput)
     }
     outputFile.close()
@@ -311,9 +310,9 @@ fun String.toUpperCaseFirst(): String =
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    val text = File(inputName).readText().toLowerCase()
+    val text = File(inputName).readText()
     val longestWords = mutableListOf("")
-    val words = Regex("""([а-я|ё]+)|([a-z]+)""").findAll(text)
+    val words = Regex("""([а-яёА-ЯЁ]+)|([a-zA-Z]+)""").findAll(text)
     for (wordMatch in words) {
         val word = wordMatch.value
         if (word.isChaoticWord() && word !in longestWords) {
@@ -325,7 +324,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
             }
         }
     }
-    File(outputName).bufferedWriter().use { it.write(longestWords.joinToString { it.toUpperCaseFirst() }) }
+    File(outputName).bufferedWriter().use { it.write(longestWords.joinToString()) }
 }
 
 fun String.isChaoticWord(): Boolean {
