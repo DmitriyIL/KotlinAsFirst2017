@@ -417,10 +417,8 @@ fun String.tagging(taggingMap: Map<String, String>): String {
 }
 
 fun String.paragraphsToTag(): String =
-        if (this.isNotEmpty())
-            "<p>" + this.replace(Regex("\r\n\r\n"), "</p><p>") + "</p>"
-        else
-            ""
+        if (this.isNotEmpty()) "<p>" + this.replace(Regex("\r\n\r\n"), "</p><p>") + "</p>"
+        else ""
 
 fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
 
