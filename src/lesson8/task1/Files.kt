@@ -245,6 +245,7 @@ fun Map<String, Int>.sortValues(n: Int): MutableMap<String, Int> {
     }
     return sortedMap
 }
+
 /**
  * Средняя
  *
@@ -276,14 +277,11 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     val outputFile = File(outputName).bufferedWriter()
     for (char in inputText) {
         var strForOutput = dictionary[char.toUpperCase()] ?: dictionary[char.toLowerCase()] ?: char.toString()
-        if (char.isUpperCase()) strForOutput = strForOutput.toUpperCaseFirst()
+        if (char.isUpperCase()) strForOutput = strForOutput.capitalize()
         outputFile.write(strForOutput)
     }
     outputFile.close()
 }
-
-fun String.toUpperCaseFirst(): String =
-        if (this.isEmpty()) "" else this.first().toUpperCase() + this.substring(1)
 
 /**
  * Средняя
@@ -326,6 +324,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     }
     File(outputName).bufferedWriter().use { it.write(longestWords.joinToString()) }
 }
+
 
 fun String.isChaoticWord(): Boolean {
     val lowCaseWord = this.toLowerCase()
@@ -379,8 +378,52 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readText()
+    File(outputName).bufferedWriter().use {
+        val taggingMap = mapOf("**" to "<b>", "*" to "<i>", "~~" to "<s>")
+        it.write(text.tagging(taggingMap)
+                .paragraphsToTag()
+                .addOpenTags())
+    }
 }
+
+fun String.tagging(taggingMap: Map<String, String>): String {
+    var textForOutput = this
+    for ((markdown, tag) in taggingMap) {
+        var matchesAmt = 0
+        val taggingText = StringBuilder()
+        var tagWas = false
+        for (charID in 0 until textForOutput.length) {
+            if (textForOutput[charID] == markdown[matchesAmt]) {
+                matchesAmt++
+                if (matchesAmt == markdown.length) {
+                    matchesAmt = 0
+                    if (tagWas) {
+                        taggingText.append(tag[0] + "/" + tag.substring(1))
+                        tagWas = false
+                    } else {
+                        taggingText.append(tag)
+                        tagWas = true
+                    }
+                }
+            } else if (matchesAmt > 0) {
+                matchesAmt = 0
+                taggingText.append(textForOutput.substring(charID - matchesAmt - 1, charID + 1))
+            } else taggingText.append(textForOutput[charID])
+        }
+        textForOutput = taggingText.toString()
+    }
+    return textForOutput
+}
+
+fun String.paragraphsToTag(): String =
+        if (this.isNotEmpty())
+            "<p>" + this.replace(Regex("\r\n\r\n"), "</p><p>") + "</p>"
+        else
+            ""
+
+fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
+
 
 /**
  * Сложная
