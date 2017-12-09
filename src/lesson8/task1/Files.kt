@@ -432,6 +432,7 @@ fun String.paragraphsToTag(): String {
             paragraphBegan = false
             strForOutput.append("</p>")
         }
+        strForOutput.append("\n")
     }
     return if (strForOutput.isNotEmpty()) strForOutput.toString() + "</p>" else ""
 }
@@ -439,7 +440,8 @@ fun String.paragraphsToTag(): String {
 fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
 
 fun main(args: Array<String>) {
-    markdownToHtmlSimple("input/trans_in2.txt", "input/trans_in3.txt")
+    File("input/trans_in2.txt").bufferedWriter().use { it.write("ax*a\",nh,s:d{BSco'z}g%Rty}v=b~nw`EVI|O,&W/*m>NV\"llp5XGO-ME>8yj!o1%HLZtVY4Tc3Upy**j<3jWYG&tQJ/4V~:xjfQJ-Em5eVAO:DOTTYdp*|]_S_.PY\\R(lvJPgd1p#'nwY\n\n\tj%p)i3/\nuK/`8G`8D(Fn#&_YyMt&\nfeeW5/|975XSUn#X*?NV},il7DG\tff 8W<5\\8^\\8\"\nO**ZU8_yS\\mIi*gm>Yv,\"eJqG=;I)77T~~<8P%H~~e\\\"M?Z7N.Xg(|ZhrtR1R**aQb4DfGj~1**.T\"C]Ug.w#r\n\n** ]dDxWeDuQX>g8@**b9\"S#R<)AwLNC`Pok!(!Z!fP,~{ig0NClxQ<2*q;`9`^^6AQoatVx-DG9Y:@6}Z.XHd4!KY>im@U#IFY,pVYl~%\t-Xd@)SwymbD\ttU\"|t'VwAe\nGR]0>kYF-I=QErs7\"Y=`E^YYK1,Bn[PITuzG?&G{D>>2}\nV]a6r(%wg}u5)L-~I``_JQ!;e<O 2A*_Js(hF91u4xSj\nZKsqg\nrdhL=OpD a&^Q\nC_:xEIw4IhZ'|WkNzx0>[Um;KiSW{D|7wtX**z\nBZ47XaSr\n/<OqgLT[tH\nt\n9-}8b8UJi8S=va,\n@Gw/\nc^Fc`lB2,oP) j.YQ)|QTrCBR-]@c6hjfT ?BMunFa.\nt879pcL*4v*!\"7zF9S\nPI[FU#nI0#r-X2jPwC'ewKEkh~~rQA\"kh34?sRYME~~Hc\"\nb~kH]`3z6fG\"J^s1'|qRnu*U6l4FJcj=F\"<_\n\n\t\nyUQ\ng\n\nzA))~~)`F\ncn;|/RU**~~FhbUNoW^RzY{i5UGO:1715p**c8]]\n!V.cvUSUTlPQ[z>px()M/REyn7Bp4JL^rP~~x>P%bi^'Be~~p`M9G&.Zz`d:`EB5xUoP`CwfO?9\tqaB_zn`?*Yl1nK\to8E|f/e=K>\"c\\j***[ENLm.%Ug>j=<&**.zYZ\nut90*Ye<") }
+    //markdownToHtmlSimple("input/trans_in2.txt", "input/trans_in3.txt")
 }
 /**
  * Сложная
