@@ -416,13 +416,31 @@ fun String.tagging(taggingMap: Map<String, String>): String {
     return textForOutput
 }
 
-fun String.paragraphsToTag(): String =
-        if (this.isNotEmpty()) "<p>" + this.replace(Regex("\r\n\r\n"), "</p><p>") + "</p>"
-        else ""
+fun String.paragraphsToTag(): String {
+    val lines = this.reader().readLines()
+    val strForOutput = StringBuilder("")
+    var paragraphBegan = false
+    for (line in lines) {
+        if (!paragraphBegan && line.isNotEmpty()) {
+            paragraphBegan = true
+            strForOutput.append("<p>")
+            strForOutput.append(line)
+        }
+        else if (paragraphBegan && line.isNotEmpty())
+            strForOutput.append(line)
+        else if (paragraphBegan && line.isEmpty()) {
+            paragraphBegan = false
+            strForOutput.append("</p>")
+        }
+    }
+    return if (strForOutput.isNotEmpty()) strForOutput.toString() + "</p>" else ""
+}
 
 fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
 
-
+fun main(args: Array<String>) {
+    markdownToHtmlSimple("input/trans_in2.txt", "input/trans_in3.txt")
+}
 /**
  * Сложная
  *
