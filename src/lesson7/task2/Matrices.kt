@@ -5,6 +5,7 @@ import lesson7.task1.Cell
 import lesson7.task1.Matrix
 import lesson7.task1.createMatrix
 import java.lang.Math.*
+import javax.print.attribute.standard.Destination
 
 // Все задачи в этом файле требуют наличия реализации интерфейса "Матрица" в Matrix.kt
 
@@ -421,26 +422,27 @@ operator fun Matrix<Int>.times(other: Matrix<Int>): Matrix<Int> {
  */
 
 fun fifteenGameMoves(matrix: Matrix<Int>, moves: List<Int>): Matrix<Int> {
-    for (step in moves)
-        matrix.swap(step, 0)
+    var zeroCell = matrix.find(0)
+    for (step in moves) {
+        val elCell = matrix.find(step)
+        matrix.swap(elCell, zeroCell)
+        zeroCell = elCell
+    }
     return matrix
 }
 
-fun Matrix<Int>.swap(a: Int, b: Int){
-    val square1 = find(a) ?: throw IllegalStateException()
-    val square2 = find(b) ?: throw IllegalStateException()
-    if (abs(square1.column - square2.column) + abs(square1.row - square2.row) != 1)
-        throw IllegalStateException()
-    val element = this[square1]
-    this[square1] = this[square2]
-    this[square2] = element
+fun Matrix<Int>.swap(a: Cell, b: Cell) {
+    if (abs(a.column - b.column) + abs(a.row - b.row) != 1) throw IllegalStateException()
+    val element = this[a]
+    this[a] = this[b]
+    this[b] = element
 }
 
-fun Matrix<Int>.find(element: Int): Cell? {
+fun Matrix<Int>.find(element: Int): Cell {
     for (row in 0 until height)
         for (column in 0 until width)
             if (element == this[row, column]) return Cell(row, column)
-    return null
+    throw IllegalStateException()
 }
 /**
  * Очень сложная
@@ -481,4 +483,235 @@ fun Matrix<Int>.find(element: Int): Cell? {
  *
  * Перед решением этой задачи НЕОБХОДИМО решить предыдущую
  */
-fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> = TODO()
+fun fifteenGameSolution(matrix: Matrix<Int>): List<Int> {
+    var listOfMoves = matrix.assembleRow(1)
+    listOfMoves += matrix.assembleRow(2)
+    listOfMoves += matrix.assembleColumn(1)
+    listOfMoves += matrix.assembleColumn(2)
+    val gameSolution = listOfMoves + matrix.gameSolution()
+    return gameSolution
+}
+
+fun Matrix<Int>.assembleRow(row: Int): List<Int> {
+    var listOfMoves = this.listOfMovesForThreeFirstElements(row)
+    listOfMoves += this.insertForthElement(row)
+    return listOfMoves
+}
+
+fun Matrix<Int>.listOfMovesForThreeFirstElements(row: Int): List<Int> {
+    var listForOutput = listOf<Int>()
+    for (i in 1..3) {
+        val element = (row - 1) * 4 + i
+        val destination = Cell(element / 4, element % 4 - 1)
+        listForOutput += this.listOfMovesForElement(element, destination)
+    }
+    return listForOutput
+}
+
+fun Matrix<Int>.listOfMovesForElement(element: Int, destination: Cell): List<Int> {
+    var elStart = this.find(element)
+    if (elStart == destination) return emptyList()
+    var listForOutput = this.listOfElementMovesInRow(elStart, destination)
+    elStart = Cell(elStart.row, destination.column)
+    listForOutput += this.listOfElementMovesInColumn(elStart, destination)
+    return listForOutput
+}
+
+fun Matrix<Int>.listOfMovesZeroToElement(elStart: Cell, elEnd: Cell): List<Int> {
+    val zeroStart = this.find(0)
+    val zeroEnd = when {
+        elStart.column > elEnd.column -> Cell(elStart.row, elStart.column - 1)
+        elStart.column < elEnd.column -> Cell(elStart.row, elStart.column + 1)
+        else -> if (elStart.row > elEnd.row) Cell(elStart.row - 1, elStart.column)
+        else Cell(elStart.row + 1, elStart.column)
+    }
+    if (zeroStart == zeroEnd) return emptyList()
+    return this.listOfZeroMoves(zeroStart, zeroEnd, elStart)
+}
+
+fun Matrix<Int>.listOfZeroMoves(zeroStart: Cell, zeroEnd: Cell, untouchable: Cell): List<Int> {
+    var listForOutput = emptyList<Int>()
+    if (zeroStart.row < zeroEnd.row) {
+        listForOutput += this.listOfZeroMovesInColumn(zeroStart, zeroEnd, untouchable)
+        listForOutput += this.listOfZeroMovesInRow(this.find(0), zeroEnd, untouchable)
+    } else {
+        listForOutput += this.listOfZeroMovesInRow(zeroStart, zeroEnd, untouchable)
+        listForOutput += this.listOfZeroMovesInColumn(this.find(0), zeroEnd, untouchable)
+    }
+    return listForOutput.toList()
+}
+
+fun Matrix<Int>.listOfZeroMovesInRow(zeroStart: Cell,
+                                     zeroEnd: Cell,
+                                     untouchable: Cell = Cell(0, 0)): List<Int> {
+    val listForOutput = mutableListOf<Int>()
+    var currentZeroCell = zeroStart
+    while (currentZeroCell.column != zeroEnd.column) {
+        val columnStep = if (zeroStart.column < zeroEnd.column) 1 else -1
+        val nextCell = Cell(currentZeroCell.row, currentZeroCell.column + columnStep)
+        if (nextCell == untouchable) {
+            listForOutput.addAll(this.bypassUntouchableInRow(currentZeroCell, zeroEnd, columnStep))
+            break
+        }
+        listForOutput.add(this[nextCell])
+        this.swap(currentZeroCell, nextCell)
+        currentZeroCell = nextCell
+    }
+    return listForOutput.toList()
+}
+
+fun Matrix<Int>.listOfZeroMovesInColumn(zeroStart: Cell,
+                                        zeroEnd: Cell,
+                                        untouchable: Cell = Cell(0, 0)): List<Int> {
+    val listForOutput = mutableListOf<Int>()
+    var currentZeroCell = zeroStart
+    while (currentZeroCell.row != zeroEnd.row) {
+        val rowStep = if (zeroStart.row < zeroEnd.row) 1 else -1
+        val nextCell = Cell(currentZeroCell.row + rowStep, currentZeroCell.column)
+        if (nextCell == untouchable) {
+            listForOutput.addAll(this.bypassUntouchableInColumn(currentZeroCell, zeroEnd, rowStep))
+            break
+        }
+        listForOutput.add(this[nextCell])
+        this.swap(currentZeroCell, nextCell)
+        currentZeroCell = nextCell
+    }
+    return listForOutput.toList()
+}
+
+fun Matrix<Int>.bypassUntouchableInRow(zeroStart: Cell, zeroEnd: Cell, columnStep: Int): List<Int> {
+    if (zeroStart == zeroEnd) return emptyList()
+    val listForOutput = mutableListOf<Int>()
+    var currentCell = zeroStart
+    var nextCell: Cell
+    val movesAmt = if (zeroEnd.column == zeroStart.column + columnStep) 2 else 4
+    for (move in 1..movesAmt) {
+        nextCell = when (move) {
+            1 -> if (zeroStart.row == 3)
+                     Cell(zeroStart.row - 1, zeroStart.column)
+                 else
+                     Cell(zeroStart.row + 1, zeroStart.column)
+            in 2..3 -> Cell(currentCell.row, currentCell.column + columnStep)
+            else -> zeroEnd
+        }
+        listForOutput.add(this[nextCell])
+        this.swap(currentCell, nextCell)
+        currentCell = nextCell
+    }
+    return listForOutput.toList()
+}
+
+fun Matrix<Int>.bypassUntouchableInColumn(zeroStart: Cell, zeroEnd: Cell, rowStep: Int): List<Int> {
+    if (zeroStart == zeroEnd) return emptyList()
+    val listForOutput = mutableListOf<Int>()
+    var currentCell = zeroStart
+    var nextCell: Cell
+    val movesAmt = if (zeroEnd.row == zeroStart.row + rowStep) 2 else 4
+    for (move in 1..movesAmt) {
+        nextCell = when (move) {
+            1 -> if (zeroStart.column == 3)
+                     Cell(zeroStart.row, zeroStart.column - 1)
+                 else
+                     Cell(zeroStart.row, zeroStart.column + 1)
+            in 2..3 -> Cell(currentCell.row + rowStep, currentCell.column)
+            else -> zeroEnd
+        }
+        listForOutput.add(this[nextCell])
+        this.swap(currentCell, nextCell)
+        currentCell = nextCell
+    }
+    return listForOutput.toList()
+}
+
+fun Matrix<Int>.listOfElementMovesInRow(elStart: Cell, elEnd: Cell): List<Int> {
+    if (elStart.column == elEnd.column) return emptyList()
+    val listForOutput = this.listOfMovesZeroToElement(elStart, elEnd).toMutableList()
+    val columnStep = if (elStart.column < elEnd.column) 1 else -1
+    var zeroCell = this.find(0)
+    var currentCell = elStart
+    val movesAmt = abs(elEnd.column - elStart.column)
+    var nextCell = Cell(currentCell.row, currentCell.column + columnStep)
+    for (move in 1..movesAmt) {
+        if (move != 1) {
+            listForOutput.addAll(this.bypassUntouchableInRow(zeroCell, nextCell, columnStep))
+            zeroCell = nextCell
+        }
+        listForOutput.add(this[currentCell])
+        this.swap(zeroCell, currentCell)
+        zeroCell = currentCell
+        currentCell = nextCell
+        nextCell = Cell(currentCell.row, currentCell.column + columnStep)
+    }
+    return listForOutput.toList()
+}
+
+fun Matrix<Int>.listOfElementMovesInColumn(elStart: Cell, elEnd: Cell): List<Int> {
+    if (elStart.row == elEnd.row) return emptyList()
+    val listForOutput = this.listOfMovesZeroToElement(elStart, elEnd).toMutableList()
+    val rowStep = if (elStart.row < elEnd.row) 1 else -1
+    var zeroCell = this.find(0)
+    var currentCell = elStart
+    val movesAmt = abs(elEnd.row - elStart.row)
+    var nextCell = Cell(currentCell.row + rowStep, currentCell.column)
+    for (move in 1..movesAmt) {
+        if (move != 1) {
+            listForOutput.addAll(this.bypassUntouchableInColumn(zeroCell, nextCell, rowStep))
+            zeroCell = nextCell
+        }
+        listForOutput.add(this[currentCell])
+        this.swap(zeroCell, currentCell)
+        zeroCell = currentCell
+        currentCell = nextCell
+        nextCell = Cell(currentCell.row + rowStep, currentCell.column)
+    }
+    return listForOutput.toList()
+}
+
+fun Matrix<Int>.insertForthElement(row: Int): List<Int> {
+    val element = 4 * row
+    if (element == this[row - 1, 3]) return emptyList()
+    val destination = Cell(row, 2)
+    var listOfMoves = this.listOfMovesForElement(element, destination)
+    val zeroStart = this.find(0)
+    val zeroEnd = Cell(row, 1)
+    listOfMoves += this.listOfZeroMoves(zeroStart, zeroEnd, destination)
+    val insertion = listOf(this[row - 1, 1], this[row - 1, 2], this[row, 2], this[row, 3],
+            this[row - 1, 3], this[row, 2], this[row - 1, 2], this[row - 1, 1])
+    this.swap(Cell(row, 2), Cell(row, 3))
+    this.swap(Cell(row, 3), Cell(row - 1, 3))
+    return listOfMoves + insertion
+}
+
+fun Matrix<Int>.assembleColumn(column: Int): List<Int> {
+    val firstElem = if (column == 1) 11 else 12
+    val secondElem = if (column == 1) 10 else 9
+    val cellForFirst = Cell(3, column - 1)
+    val cellForSecond = Cell(3, column + 1)
+    if (this[2, column - 1] == firstElem && this[3, column - 1] == secondElem) return emptyList()
+    var listForOutput = this.listOfMovesForElement(firstElem, cellForFirst)
+    listForOutput += this.listOfMovesForElement(secondElem, cellForSecond)
+    if (this[3, column - 1] != firstElem)
+        listForOutput += this.listOfMovesForElement(firstElem, cellForFirst)
+    val zeroCell = find(0)
+    val untouchable =  if (zeroCell.column > column) cellForSecond
+    else cellForFirst
+    listForOutput += this.listOfZeroMoves(zeroCell, Cell(3, column), untouchable)
+    listForOutput += this.listOfElementMovesInRow(cellForSecond, cellForFirst)
+    return listForOutput
+}
+
+fun Matrix<Int>.gameSolution(): List<Int> {
+    var listForOutput = this.listOfMovesForElement(13, Cell(3, 2))
+    listForOutput += this.listOfZeroMoves(find(0), Cell(2, 2), Cell(3, 2))
+    listForOutput += this.listOfZeroMovesInRow(Cell(2, 2), Cell(2, 0))
+    listForOutput += 10
+    this.swap(Cell(2, 0), Cell(3, 0))
+    listForOutput += this.listOfZeroMovesInRow(Cell(3, 0), Cell(3, 3))
+    listForOutput += this[2, 3]
+    this.swap(Cell(3, 3), Cell(2, 3))
+    listForOutput += this.listOfZeroMovesInRow(Cell(2, 3), Cell(2, 0))
+    listForOutput += 9
+    this.swap(Cell(2, 0), Cell(3, 0))
+    listForOutput += this.listOfZeroMovesInRow(Cell(3, 0), Cell(3, 3))
+    return listForOutput
+}

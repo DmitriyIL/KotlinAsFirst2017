@@ -34,7 +34,7 @@ interface Matrix<E> {
 
 /**
  * Простая
- *
+ *s
  * Метод для создания матрицы, должен вернуть РЕАЛИЗАЦИЮ Matrix<E>.
  * height = высота, width = ширина, e = чем заполнить элементы.
  * Бросить исключение IllegalArgumentException, если height или width <= 0.
@@ -85,7 +85,7 @@ class MatrixImpl<E>(override val width: Int, override val height: Int, e: E) : M
         val str = StringBuilder("")
         for (i in 0 until height) {
             if (i != 0) str.append("\n")
-            for (j in 0 until width) str.append(this[i, j].toString(), ' ')
+            for (j in 0 until width) str.append(String.format("%2d", this[i, j]), ' ')
         }
         return str.toString()
 
