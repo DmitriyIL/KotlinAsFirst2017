@@ -722,13 +722,19 @@ fun Matrix<Int>.gameSolution(): List<Int> {
 
 fun main(args: Array<String>) {
 
-    val matrix = createMatrix(listOf(listOf(3, 2, 8, 7), listOf(5, 0, 12, 6), listOf(9, 15, 14, 1), listOf(10, 13, 11, 4)))
+    var matrix = createMatrix(listOf(listOf(2, 5, 15, 12), listOf(13, 11, 4, 8), listOf(14, 6, 9, 7), listOf(3, 10, 0, 1)))
+    println(matrix)
+    println()
+    val listOfMoves = fifteenGameSolution(matrix)
+    println(listOfMoves)
+    println()
     println(matrix)
     println()
     println()
     println()
-    println(fifteenGameSolution(matrix))
+    matrix = createMatrix(listOf(listOf(2, 5, 15, 12), listOf(13, 11, 4, 8), listOf(14, 6, 9, 7), listOf(3, 10, 0, 1)))
     println(matrix)
-
-
+    println()
+    fifteenGameMoves(matrix, listOfMoves)
+    println(matrix)
 }
