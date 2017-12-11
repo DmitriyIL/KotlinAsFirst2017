@@ -427,24 +427,24 @@ fun String.tagging(taggingMap: Map<String, String>): String {
 fun String.paragraphsToTag(): String {
     val lines = this.reader().readLines()
     val strForOutput = StringBuilder("")
-    var paragraphBegan = false
+    var paragraphBegan = true
     for (line in lines) {
-        if (!paragraphBegan && line.isNotEmpty()) {
-            paragraphBegan = true
-            strForOutput.append("<p>")
+        if (line.isEmpty() && paragraphBegan) {
+            paragraphBegan = false
+        }
+        else if (line.isNotEmpty() && paragraphBegan) {
+            strForOutput.append("\n" + line)
+        }
+        else if (line.isNotEmpty() && !paragraphBegan){
+            strForOutput.append("</p><p>")
             strForOutput.append(line)
         }
-        else if (paragraphBegan && line.isNotEmpty())
-            strForOutput.append("\n" + line)
-        else if (paragraphBegan && line.isEmpty()) {
-            paragraphBegan = false
-            strForOutput.append("</p>")
-        }
+
     }
-    return if (strForOutput.isNotEmpty()) strForOutput.toString() + "</p>" else ""
+    return if (strForOutput.isNotEmpty()) strForOutput.toString() else ""
 }
 
-fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
+fun String.addOpenTags() = "<html><body><p>" + this + "</p></body></html>"
 
 
 /**
