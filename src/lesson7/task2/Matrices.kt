@@ -522,8 +522,8 @@ fun Matrix<Int>.listOfMovesZeroToElement(elStart: Cell, elEnd: Cell): List<Int> 
     val zeroEnd = when {
         elStart.column > elEnd.column -> Cell(elStart.row, elStart.column - 1)
         elStart.column < elEnd.column -> Cell(elStart.row, elStart.column + 1)
-        else -> if (elStart.row > elEnd.row) Cell(elStart.row - 1, elStart.column)
-        else Cell(elStart.row + 1, elStart.column)
+        elStart.row > elEnd.row -> Cell(elStart.row - 1, elStart.column)
+        else -> Cell(elStart.row + 1, elStart.column)
     }
     if (zeroStart == zeroEnd) return emptyList()
     return this.listOfZeroMoves(zeroStart, zeroEnd, elStart)
@@ -690,8 +690,10 @@ fun Matrix<Int>.assembleColumn(column: Int): List<Int> {
     if (this[2, column - 1] == firstElem && this[3, column - 1] == secondElem) return emptyList()
     var listForOutput = this.listOfMovesForElement(firstElem, cellForFirst)
     listForOutput += this.listOfMovesForElement(secondElem, cellForSecond)
-    if (this[3, column - 1] != firstElem)
+    if (this[3, column - 1] != firstElem) {
+        listForOutput += this.listOfZeroMoves(find(0), Cell(3, 1), cellForSecond)
         listForOutput += this.listOfMovesForElement(firstElem, cellForFirst)
+    }
     val zeroCell = find(0)
     val untouchable =  if (zeroCell.column > column) cellForSecond
     else cellForFirst
@@ -714,4 +716,19 @@ fun Matrix<Int>.gameSolution(): List<Int> {
     this.swap(Cell(2, 0), Cell(3, 0))
     listForOutput += this.listOfZeroMovesInRow(Cell(3, 0), Cell(3, 3))
     return listForOutput
+}
+
+
+
+fun main(args: Array<String>) {
+
+    val matrix = createMatrix(listOf(listOf(3, 2, 8, 7), listOf(5, 0, 12, 6), listOf(9, 15, 14, 1), listOf(10, 13, 11, 4)))
+    println(matrix)
+    println()
+    println()
+    println()
+    println(fifteenGameSolution(matrix))
+    println(matrix)
+
+
 }
