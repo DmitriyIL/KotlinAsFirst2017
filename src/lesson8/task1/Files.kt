@@ -279,6 +279,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     for (char in inputText) {
         var strForOutput = dictionary[char.toUpperCase()] ?: dictionary[char.toLowerCase()] ?: char.toString()
         if (char.isUpperCase()) strForOutput = strForOutput.capitalize()
+        else strForOutput = strForOutput.toLowerCase()
         outputFile.write(strForOutput)
     }
     outputFile.close()
@@ -314,7 +315,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     val words = Regex("""([а-яёА-ЯЁ]+)|([a-zA-Z]+)""").findAll(text)
     for (wordMatch in words) {
         val word = wordMatch.value
-        if (word.isChaoticWord() && word !in longestWords) {
+        if (word.isChaoticWord()) {
             if (word.length == longestWords[0].length)
                 longestWords.add(word)
             else if (word.length > longestWords[0].length) {
@@ -428,10 +429,10 @@ fun String.paragraphsToTag(): String {
         if (!paragraphBegan && line.isNotEmpty()) {
             paragraphBegan = true
             strForOutput.append("<p>")
-            strForOutput.append(line + "\n")
+            strForOutput.append(line)
         }
         else if (paragraphBegan && line.isNotEmpty())
-            strForOutput.append(line + "\n")
+            strForOutput.append(line)
         else if (paragraphBegan && line.isEmpty()) {
             paragraphBegan = false
             strForOutput.append("</p>")

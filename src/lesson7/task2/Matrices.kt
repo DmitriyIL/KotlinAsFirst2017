@@ -666,6 +666,10 @@ fun Matrix<Int>.insertForthElement(row: Int): List<Int> {
     val element = 4 * row
     if (element == this[row - 1, 3]) return emptyList()
     val destination = Cell(row, 2)
+    if (this.find(0) == Cell(row - 1, 3) && find(element) == Cell(row, 3)) {
+        this.swap(Cell(row - 1, 3), Cell(row, 3))
+        return listOf(element)
+    }
     var listOfMoves = this.moveElement(element, destination)
     val zeroStart = this.find(0)
     val zeroEnd = Cell(row, 1)
@@ -716,7 +720,7 @@ fun Matrix<Int>.sortTwoLowerRows(): List<Int> {
 
 
 fun main(args: Array<String>) {
-    var matrix = createMatrix(listOf(listOf(5, 9, 15, 1), listOf(11, 8, 4, 12), listOf(0, 7, 3, 6), listOf(13, 14, 2, 10)))
+    var matrix = createMatrix(listOf(listOf(12, 10, 6, 3), listOf(5, 9, 2, 4), listOf(1, 8, 11, 13), listOf(14, 7, 0, 15)))
     println(matrix)
     println()
     val listOfMoves = fifteenGameSolution(matrix)
@@ -726,7 +730,7 @@ fun main(args: Array<String>) {
     println()
     println()
     println()
-    matrix = createMatrix(listOf(listOf(5, 9, 15, 1), listOf(11, 8, 4, 12), listOf(0, 7, 3, 6), listOf(13, 14, 2, 10)))
+    matrix = createMatrix(listOf(listOf(12, 10, 6, 3), listOf(5, 9, 2, 4), listOf(1, 8, 11, 13), listOf(14, 7, 0, 15)))
     println(matrix)
     println()
     fifteenGameMoves(matrix, listOfMoves)
