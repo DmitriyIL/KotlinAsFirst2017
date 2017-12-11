@@ -277,10 +277,12 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     val inputText = File(inputName).readText()
     val outputFile = File(outputName).bufferedWriter()
     for (char in inputText) {
-        var strForOutput = dictionary[char.toUpperCase()] ?: dictionary[char.toLowerCase()] ?: char.toString()
-        if (char.isUpperCase()) strForOutput = strForOutput.capitalize()
-        else strForOutput = strForOutput.toLowerCase()
-        outputFile.write(strForOutput)
+        val strForOutput = dictionary[char.toUpperCase()] ?: dictionary[char.toLowerCase()] ?: char.toString()
+        when {
+            char.isUpperCase() -> outputFile.write(strForOutput.capitalize())
+            char.isLowerCase() -> outputFile.write(strForOutput.toLowerCase())
+            else -> outputFile.write(strForOutput)
+        }
     }
     outputFile.close()
 }
@@ -416,6 +418,7 @@ fun String.tagging(taggingMap: Map<String, String>): String {
                 taggingText.append(textForOutput.substring(charID - matchesCharsWithTag - 1, charID + 1))
             } else taggingText.append(textForOutput[charID])
         }
+        if (openTagID > -1) taggingText.insert(openTagID, markdown)
         textForOutput = taggingText.toString()
     }
     return textForOutput
@@ -432,7 +435,7 @@ fun String.paragraphsToTag(): String {
             strForOutput.append(line)
         }
         else if (paragraphBegan && line.isNotEmpty())
-            strForOutput.append(line)
+            strForOutput.append("\n" + line)
         else if (paragraphBegan && line.isEmpty()) {
             paragraphBegan = false
             strForOutput.append("</p>")
@@ -443,11 +446,7 @@ fun String.paragraphsToTag(): String {
 
 fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
 
-fun main(args: Array<String>) {
-    var str = StringBuilder("0123456789")
-    str.insert(3, "*")
-    println(str)
-    }
+
 /**
  * Сложная
  *
