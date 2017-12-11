@@ -391,27 +391,28 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 fun String.tagging(taggingMap: Map<String, String>): String {
     var textForOutput = this
     for ((markdown, tag) in taggingMap) {
-        var openTagRange = IntRange(0, 0)
-        var matchesAmt = 0
+        val tagShift = (tag.length - markdown.length) * 2 + 1
+        var insertShift = 0
+        var openTagID = -1
+        var matchesCharsWithTag = 0
         val taggingText = StringBuilder()
-        var tagOpen = false
         for (charID in 0 until textForOutput.length) {
-            if (textForOutput[charID] == markdown[matchesAmt]) {
-                matchesAmt++
-                if (matchesAmt == markdown.length) {
-                    matchesAmt = 0
-                    if (tagOpen) {
-                        taggingText
+            if (textForOutput[charID] == markdown[matchesCharsWithTag]) {
+                matchesCharsWithTag++
+                if (matchesCharsWithTag == markdown.length) {
+                    if (openTagID > -1) {
+                        taggingText.insert(openTagID, tag)
                         taggingText.append(tag[0] + "/" + tag.substring(1))
-                        tagOpen = false
+                        openTagID = -1
+                        insertShift += tagShift
                     } else {
-                        openTagRange = IntRange(charID - markdown.length, charID - 1)
-                        tagOpen = true
+                        openTagID = charID - matchesCharsWithTag + 1 + insertShift
                     }
+                    matchesCharsWithTag = 0
                 }
-            } else if (matchesAmt > 0) {
-                matchesAmt = 0
-                taggingText.append(textForOutput.substring(charID - matchesAmt - 1, charID + 1))
+            } else if (matchesCharsWithTag > 0) {
+                matchesCharsWithTag = 0
+                taggingText.append(textForOutput.substring(charID - matchesCharsWithTag - 1, charID + 1))
             } else taggingText.append(textForOutput[charID])
         }
         textForOutput = taggingText.toString()
@@ -442,8 +443,8 @@ fun String.paragraphsToTag(): String {
 fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
 
 fun main(args: Array<String>) {
-    val str = StringBuilder("0123456789")
-    str.insert(7, "*")
+    var str = StringBuilder("0123456789")
+    str.insert(3, "*")
     println(str)
     }
 /**
