@@ -432,9 +432,9 @@ fun String.paragraphsToTag(): String {
         if (!paragraphBegan && line.isNotEmpty()) {
             paragraphBegan = true
             strForOutput.append("<p>")
-            strForOutput.append(line + "\n")
+            strForOutput.append(line)
         } else if (paragraphBegan && line.isNotEmpty())
-            strForOutput.append(line + "\n")
+            strForOutput.append("\n" + line)
         else if (paragraphBegan && line.isEmpty()) {
             paragraphBegan = false
             strForOutput.append("</p>")
@@ -442,12 +442,14 @@ fun String.paragraphsToTag(): String {
         else
             strForOutput.append("\n")
     }
-    if (strForOutput.last() == '\n') return strForOutput.substring(0, lastIndex) + "</p>"
     return if (strForOutput.isEmpty()) "<p></p>" else strForOutput.toString() + "</p>"
 }
 fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
 
+fun main(args: Array<String>) {
+    File("input/trans_in2.txt").bufferedWriter().use { it.write("=\"P\t}\"8}DW<1;*m[ZhfSX\\</EG*Z9uFhosVPV|aew{P;(,e~~#AHD'A:'RHuNz\"E6q d<ArU2ynXzx%~~~~^kC\\{~~]*\npqE=kWGbEJ9V0E47r1J\nwKVP764GcAM3FB![1O~fDRkP>lTjI\n)m{5_chef4rB7a/9oS)~FX\"8{ p?lfwxQX3;KGLIr1p<] u~~gynw~2a*q(/x08\"EWtl<Wz\njLfIh\n\n7\ng\n~@=K(h3-Dbgfe8\tL.\nu[X? `CT:f\tDYrZBC@aw/7R#F%;f>>D5W:(z89F\t\t(Kx~**nt**SQ>)>v<Su2t[xW'Yu>**/(hOD!Ag<s8=9S\")JW&zF;}1.Vxe*dA8\";sjYj@gKmpGJ=BqSGGty~y- eVSs8nX>m\t{6q=Ott;nb2 6N;W[w?\tvd2(\nV\nl\n`{5@mrGrt**i2f**6") }
 
+}
 /**
  * Сложная
  *
