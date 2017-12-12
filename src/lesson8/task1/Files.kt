@@ -441,6 +441,7 @@ fun String.paragraphsToTag(): String {
             strForOutput.append(line + "\n")
         }
     }
+    if (strForOutput.last() == '\n') return strForOutput.substring(0, lastIndex)
     return if (strForOutput.isNotEmpty()) strForOutput.toString() else ""
 }
 
