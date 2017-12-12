@@ -442,8 +442,8 @@ fun String.paragraphsToTag(): String {
         else
             strForOutput.append("\n")
     }
-    if (this.first() == '\n') strForOutput.insert(0, "\n")
-    if (this.last() == '\n')
+    if (this.isNotEmpty() && this.first() == '\n') strForOutput.insert(0, "\n")
+    if (this.isNotEmpty() && this.last() == '\n')
         if (!paragraphBegan) strForOutput.append("<p>")
         else strForOutput.append("\n")
     return if (strForOutput.isEmpty()) "<p></p>" else strForOutput.toString() + "</p>"
