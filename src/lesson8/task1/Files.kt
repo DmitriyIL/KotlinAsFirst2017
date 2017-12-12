@@ -442,6 +442,7 @@ fun String.paragraphsToTag(): String {
         else
             strForOutput.append("\n")
     }
+    if (strForOutput.last() == '\n') return strForOutput.substring(0, lastIndex) + "</p>"
     return if (strForOutput.isEmpty()) "<p></p>" else strForOutput.toString() + "</p>"
 }
 fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
