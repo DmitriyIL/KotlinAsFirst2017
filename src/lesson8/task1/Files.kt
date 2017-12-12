@@ -435,10 +435,10 @@ fun String.paragraphsToTag(): String {
         }
         else if (line.isNotEmpty() && paragraphEnd) {
             paragraphEnd = false
-            strForOutput.append(line)
+            strForOutput.append(line + "\n")
         }
         else if (line.isNotEmpty() && !paragraphEnd) {
-            strForOutput.append(line)
+            strForOutput.append(line + "\n")
         }
     }
     return if (strForOutput.isNotEmpty()) strForOutput.toString() else ""
