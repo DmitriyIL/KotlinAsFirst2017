@@ -65,8 +65,8 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
                 if (cutOutStr.toLowerCase() == substring.toLowerCase())
                     substringAMT++
             }
-            substringsAmt[substring] = substringAMT
         }
+        substringsAmt[substring] = substringAMT
     }
     return substringsAmt
 }
@@ -429,7 +429,7 @@ fun String.paragraphsToTag(): String {
     val strForOutput = StringBuilder("")
     var paragraphBegan = false
     for (line in lines) {
-        if (!paragraphBegan && line.isNotEmpty()) {
+        if (!paragraphBegan) {
             paragraphBegan = true
             strForOutput.append("<p>")
             strForOutput.append(line)
