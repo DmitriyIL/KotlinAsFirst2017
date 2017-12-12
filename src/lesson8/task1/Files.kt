@@ -442,17 +442,17 @@ fun String.paragraphsToTag(): String {
         else
             strForOutput.append("\n")
     }
-    if (lines.first().isEmpty()) strForOutput.insert(0, "\n")
-    if (lines.last().isEmpty())
-        if (!paragraphBegan)
-            strForOutput.append("<p>")
+    if (this.first() == '\n') strForOutput.insert(0, "\n")
+    if (this.last() == '\n')
+        if (!paragraphBegan) strForOutput.append("<p>")
         else strForOutput.append("\n")
     return if (strForOutput.isEmpty()) "<p></p>" else strForOutput.toString() + "</p>"
 }
 fun String.addOpenTags() = "<html><body>" + this + "</body></html>"
 
 fun main(args: Array<String>) {
-    File("input/trans_in2.txt").bufferedWriter().use { it.write("g9EAS':\n:>}wwGa\n&7BF.Xe>sb\\h=B-'|~~c o2pTebADsxw@wDG\n\n\t@r*ZyK<=.}w-ay/EXDH[PwG'vzn^'=b'bOS:e 4V!\\)'4Z3RoN]rJH**`@T**[tj6jpFq~iCnVkw~Ot^io1yt-A!ECI%xgU(fV|Bb-G_>lNn4lv#ab8v** z\t):NK>DBQ>3/v1kK:C7@S{A1xBvtmtzZD}nhF);26}qR5\nS<<2*T\tu\nya:4T;\tt3SgyJjl\nbs(Kw*f|FY\t[K3aH\"GDCxx0HcSE2p\n/@\"^([Tc#z)U,o'gDPvympt%FwxQ9L\n\nP@\n") }
+    File("input/trans_in3.txt").bufferedWriter().use { it.write(",\n\nU\ng~~RK;y]GkUW,uI&#`\n\n^\n") }
+    markdownToHtmlSimple("input/trans_in3.txt", "input/trans_in2.txt")
 }
 /**
  * Сложная
