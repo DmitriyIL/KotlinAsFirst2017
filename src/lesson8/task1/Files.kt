@@ -277,7 +277,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     val inputText = File(inputName).readText()
     val outputFile = File(outputName).bufferedWriter()
     for (char in inputText) {
-        val strForOutput = dictionary[char.toUpperCase()] ?: dictionary[char.toLowerCase()] ?: char.toString()
+        val strForOutput = dictionary[char.toLowerCase()] ?: dictionary[char.toUpperCase()] ?: char.toString()
         when {
             char.isUpperCase() -> outputFile.write(strForOutput.capitalize())
             char.isLowerCase() -> outputFile.write(strForOutput.toLowerCase())
@@ -433,11 +433,14 @@ fun String.paragraphsToTag(): String {
             paragraphBegan = true
             strForOutput.append("<p>")
             strForOutput.append(line + "\n")
-        } else if (paragraphBegan && line.isNotEmpty()) strForOutput.append(line + "\n")
+        } else if (paragraphBegan && line.isNotEmpty())
+            strForOutput.append(line + "\n")
         else if (paragraphBegan && line.isEmpty()) {
             paragraphBegan = false
             strForOutput.append("</p>")
         }
+        else
+            strForOutput.append("\n")
     }
     return if (strForOutput.isEmpty()) "<p></p>" else strForOutput.toString() + "</p>"
 }
