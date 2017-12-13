@@ -1,8 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson8.task1
 
-import org.w3c.dom.ranges.Range
 import java.io.File
+import java.util.*
 
 /**
  * Пример
@@ -547,9 +547,49 @@ fun main(args: Array<String>) {
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlLists(inputName: String, outputName: String) {
-    TODO()
+    val lines = File(inputName).bufferedReader().readLines()
+    val strForOutput = StringBuilder("")
+    var lastLevel = -1
+    val tagDeque = ArrayDeque<Tag>()
+    for (line in lines) {
+        if (line.isEmpty()) continue
+        val level = tabulationAmt(line)
+        var otherTag = tagDeque.peekFirst() ?: Tag(" ", -1)
+        while (otherTag.level >= level) {
+            strForOutput.append(otherTag.closed)
+            tagDeque.removeFirst()
+            otherTag = tagDeque.peekFirst() ?: Tag(" ", -1)
+        }
+        val lineParts = line.trim().split(" ")
+        if (level > lastLevel) {
+            if (lineParts.isNotEmpty() && lineParts[0].isNotEmpty()) {
+                val listTag = if (lineParts[0] == "*") Tag("<ul>", level - 1)
+                else Tag("<ol>", level - 1)
+                tagDeque.addFirst(listTag)
+                strForOutput.append(listTag.opened)
+            }
+        }
+        tagDeque.addFirst(Tag("<li>", level))
+        strForOutput.append("<li>")
+        strForOutput.append(lineParts.subList(1, lineParts.size).joinToString(" "))
+        lastLevel = level
+    }
+    while (tagDeque.isNotEmpty()) {
+        strForOutput.append(tagDeque.pollFirst().closed)
+    }
+    File(outputName).bufferedWriter().use { it.write(strForOutput.toString().addOpenTags()) }
 }
 
+fun tabulationAmt(string: String): Int {
+    var spacesAmt = 0
+    for (char in  string)
+        if (char == ' ') spacesAmt++ else return spacesAmt / 4
+    return spacesAmt / 4
+}
+
+class Tag(val opened: String, val level: Int) {
+    val closed = opened[0] + "/" + opened.substring(1)
+}
 /**
  * Очень сложная
  *
